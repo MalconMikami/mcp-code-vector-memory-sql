@@ -1,0 +1,388 @@
+[
+  {
+    "content": "Remember: API client uses timeout 15s in module_api.py",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "API client timeout is 15s",
+    "tags": "api,timeout",
+    "priority": 2,
+    "metadata": {
+      "area": "api",
+      "source": "sample",
+      "event_time": "2025-01-10T09:12:00Z",
+      "duration_ms": 120,
+      "lines_changed": 8,
+      "files": [
+        "src/api/client.py"
+      ]
+    }
+  },
+  {
+    "content": "Bug fix: handled null user in auth flow; error code AUTH_004",
+    "session_id": "S1",
+    "kind": "bugfix",
+    "summary": "Auth flow handles null user",
+    "tags": "bug,auth",
+    "priority": 1,
+    "metadata": {
+      "area": "auth",
+      "bug_id": 4321,
+      "event_time": "2025-01-11T14:01:00Z",
+      "files": [
+        "src/auth/login.py",
+        "src/auth/session.py"
+      ]
+    }
+  },
+  {
+    "content": "Refactor: extracted helper parse_config and added unit tests",
+    "session_id": "S1",
+    "kind": "refactor",
+    "summary": "parse_config helper extracted",
+    "tags": "refactor,config",
+    "priority": 3,
+    "metadata": {
+      "area": "config",
+      "event_time": "2025-01-12T10:20:00Z",
+      "files": [
+        "src/config/parser.py",
+        "tests/test_config.py"
+      ],
+      "lines_changed": 64
+    }
+  },
+  {
+    "content": "Feature: added dashboard route /dashboard and sidebar link",
+    "session_id": "S2",
+    "kind": "feature",
+    "summary": "Dashboard route added",
+    "tags": "feature,ui",
+    "priority": 2,
+    "metadata": {
+      "area": "ui",
+      "event_time": "2025-01-12T15:45:00Z",
+      "files": [
+        "src/ui/routes.py",
+        "src/ui/sidebar.tsx"
+      ]
+    }
+  },
+  {
+    "content": "Decision: keep sqlite as local store; avoid remote sync for now",
+    "session_id": "S2",
+    "kind": "decision",
+    "summary": "SQLite stays as local store",
+    "tags": "decision,data",
+    "priority": 2,
+    "metadata": {
+      "area": "data",
+      "event_time": "2025-01-13T08:30:00Z",
+      "reason": "local first"
+    }
+  },
+  {
+    "content": "Config: set max_connections=20 in server.toml",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "max_connections set to 20",
+    "tags": "config,server",
+    "priority": 3,
+    "metadata": {
+      "area": "server",
+      "event_time": "2025-01-13T09:00:00Z",
+      "numbers": {
+        "max_connections": 20
+      }
+    }
+  },
+  {
+    "content": "Error: connection refused on 127.0.0.1:5432 while running tests",
+    "session_id": "S1",
+    "kind": "incident",
+    "summary": "DB connection refused on local port",
+    "tags": "error,db",
+    "priority": 2,
+    "metadata": {
+      "area": "db",
+      "event_time": "2025-01-14T07:55:00Z",
+      "port": 5432,
+      "host": "127.0.0.1"
+    }
+  },
+  {
+    "content": "Test plan: add unit tests for cache invalidation and retry logic",
+    "session_id": "S1",
+    "kind": "test",
+    "summary": "Plan for cache invalidation tests",
+    "tags": "test,cache",
+    "priority": 4,
+    "metadata": {
+      "area": "cache",
+      "event_time": "2025-01-14T11:00:00Z"
+    }
+  },
+  {
+    "content": "Short note: OK",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "OK",
+    "tags": "note",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-01-14T12:00:00Z"
+    }
+  },
+  {
+    "content": "Long note: During refactor of memory search, we switched FTS to triggers and removed external content tables. This avoids stale rows after delete and keeps the index consistent. We also increased cache_size and set mmap_size for faster reads on SSD.",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "FTS triggers + cache tuning",
+    "tags": "fts,sqlite,performance",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-01-15T09:10:00Z",
+      "area": "sqlite",
+      "numbers": {
+        "cache_size": 20000,
+        "mmap_size": 268435456
+      }
+    }
+  },
+  {
+    "content": "Performance: query time 120ms -> 35ms after index on session_id",
+    "session_id": "S2",
+    "kind": "perf",
+    "summary": "Index improved query time",
+    "tags": "perf,index",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-01-15T10:20:00Z",
+      "numbers": {
+        "before_ms": 120,
+        "after_ms": 35
+      },
+      "files": [
+        "migrations/001_add_index.sql"
+      ]
+    }
+  },
+  {
+    "content": "Incident: build failed due to missing dotenv module",
+    "session_id": "S2",
+    "kind": "incident",
+    "summary": "Build failed: dotenv missing",
+    "tags": "incident,build",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-01-16T08:00:00Z",
+      "error": "ModuleNotFoundError: dotenv"
+    }
+  },
+  {
+    "content": "Migration: added column session_id to memories table",
+    "session_id": "S1",
+    "kind": "migration",
+    "summary": "memories.session_id added",
+    "tags": "migration,db",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-01-16T09:30:00Z",
+      "files": [
+        "migrations/002_add_session_id.sql"
+      ]
+    }
+  },
+  {
+    "content": "Decision: keep priority scale 1-5 where 1 is highest",
+    "session_id": "S1",
+    "kind": "decision",
+    "summary": "Priority scale fixed to 1-5",
+    "tags": "decision,priority",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-01-16T10:00:00Z"
+    }
+  },
+  {
+    "content": "Tooling: update opencode.json to use python -m code_memory",
+    "session_id": "S3",
+    "kind": "tooling",
+    "summary": "OpenCode config uses module entrypoint",
+    "tags": "tooling,config",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-01-17T08:45:00Z",
+      "files": [
+        ".config/opencode/opencode.json"
+      ]
+    }
+  },
+  {
+    "content": "Security: redacted token pattern from logs, avoid api_key values",
+    "session_id": "S1",
+    "kind": "security",
+    "summary": "Token patterns redacted",
+    "tags": "security,logs",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-01-17T12:05:00Z",
+      "regex": "api_key"
+    }
+  },
+  {
+    "content": "Doc: updated README with env vars and mcp config",
+    "session_id": "S2",
+    "kind": "doc",
+    "summary": "README updated",
+    "tags": "doc,readme",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-01-17T14:30:00Z",
+      "files": [
+        "README.md"
+      ]
+    }
+  },
+  {
+    "content": "UI: align primary button and add tooltip for Save",
+    "session_id": "S2",
+    "kind": "ui",
+    "summary": "Primary button aligned",
+    "tags": "ui,ux",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-01-18T10:15:00Z",
+      "files": [
+        "src/ui/button.tsx",
+        "src/ui/tooltip.tsx"
+      ]
+    }
+  },
+  {
+    "content": "Edge case: Windows path with backslashes in config: C:\\repo\\app",
+    "session_id": "S3",
+    "kind": "note",
+    "summary": "Windows path stored as raw string",
+    "tags": "windows,path",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-01-18T14:40:00Z",
+      "path": "C:\\repo\\app"
+    }
+  },
+  {
+    "content": "Feature: added rerank bonus for FTS hits in hybrid search",
+    "session_id": "S1",
+    "kind": "feature",
+    "summary": "FTS bonus in rerank",
+    "tags": "search,fts",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-01-19T09:00:00Z",
+      "numbers": {
+        "fts_bonus": 0.1
+      }
+    }
+  },
+  {
+    "content": "Perf test: inserted 500 memories in 4.2s on SSD",
+    "session_id": "S1",
+    "kind": "perf",
+    "summary": "500 inserts in 4.2s",
+    "tags": "perf,load",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-01-19T11:20:00Z",
+      "numbers": {
+        "count": 500,
+        "seconds": 4.2
+      }
+    }
+  },
+  {
+    "content": "Debug: stderr shows Connection closed after greeting input",
+    "session_id": "S3",
+    "kind": "debug",
+    "summary": "Connection closed after greeting",
+    "tags": "debug,mcp",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-01-20T08:10:00Z"
+    }
+  },
+  {
+    "content": "Config: set CODE_MEMORY_TOP_K=12 and TOP_P=0.6",
+    "session_id": "S3",
+    "kind": "config",
+    "summary": "Top K and Top P configured",
+    "tags": "config,search",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-01-20T10:00:00Z",
+      "numbers": {
+        "top_k": 12,
+        "top_p": 0.6
+      }
+    }
+  },
+  {
+    "content": "Note: create new log file per session using timestamp",
+    "session_id": "S2",
+    "kind": "note",
+    "summary": "Log file per session",
+    "tags": "logs,session",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-01-21T09:10:00Z"
+    }
+  },
+  {
+    "content": "Cleanup: added maintenance tool to purge or vacuum DB",
+    "session_id": "S1",
+    "kind": "maintenance",
+    "summary": "Maintenance tool added",
+    "tags": "maintenance,db",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-01-21T13:25:00Z",
+      "actions": [
+        "vacuum",
+        "purge_session",
+        "prune_older_than"
+      ]
+    }
+  },
+  {
+    "content": "Test: validate FTS trigger delete removes row from memories_fts",
+    "session_id": "S1",
+    "kind": "test",
+    "summary": "FTS delete trigger validated",
+    "tags": "test,fts",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-01-22T08:30:00Z"
+    }
+  },
+  {
+    "content": "Decision: graph features off by default to reduce noise",
+    "session_id": "S2",
+    "kind": "decision",
+    "summary": "Graph off by default",
+    "tags": "decision,graph",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-01-22T11:50:00Z"
+    }
+  },
+  {
+    "content": "Note: switched db path to workspace root unless CODE_MEMORY_DB_PATH is set",
+    "session_id": "S3",
+    "kind": "note",
+    "summary": "DB path defaults to workspace",
+    "tags": "db,config",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-01-23T09:05:00Z"
+    }
+  }
+]

@@ -1,0 +1,4202 @@
+[
+  {
+    "content": "[0] Perf record: session=S1 kind=note module=module_0.py latency_ms=20 rows=100 retries=0",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 0 latency=20ms",
+    "tags": "note,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T09:00:00Z",
+      "numbers": {
+        "latency_ms": 20,
+        "rows": 100,
+        "retries": 0
+      },
+      "files": [
+        "src/module_0.py"
+      ],
+      "seed": 42,
+      "index": 0
+    }
+  },
+  {
+    "content": "[1] Perf record: session=S2 kind=bugfix module=module_1.py latency_ms=21 rows=101 retries=1",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 1 latency=21ms",
+    "tags": "bugfix,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T09:15:00Z",
+      "numbers": {
+        "latency_ms": 21,
+        "rows": 101,
+        "retries": 1
+      },
+      "files": [
+        "src/module_1.py"
+      ],
+      "seed": 42,
+      "index": 1
+    }
+  },
+  {
+    "content": "[2] Perf record: session=S3 kind=feature module=module_2.py latency_ms=22 rows=102 retries=2",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 2 latency=22ms",
+    "tags": "feature,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T09:30:00Z",
+      "numbers": {
+        "latency_ms": 22,
+        "rows": 102,
+        "retries": 2
+      },
+      "files": [
+        "src/module_2.py"
+      ],
+      "seed": 42,
+      "index": 2
+    }
+  },
+  {
+    "content": "[3] Perf record: session=S4 kind=perf module=module_3.py latency_ms=23 rows=103 retries=0",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 3 latency=23ms",
+    "tags": "perf,benchmark",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T09:45:00Z",
+      "numbers": {
+        "latency_ms": 23,
+        "rows": 103,
+        "retries": 0
+      },
+      "files": [
+        "src/module_3.py"
+      ],
+      "seed": 42,
+      "index": 3
+    }
+  },
+  {
+    "content": "[4] Perf record: session=S1 kind=config module=module_4.py latency_ms=24 rows=104 retries=1",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 4 latency=24ms",
+    "tags": "config,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T10:00:00Z",
+      "numbers": {
+        "latency_ms": 24,
+        "rows": 104,
+        "retries": 1
+      },
+      "files": [
+        "src/module_4.py"
+      ],
+      "seed": 42,
+      "index": 4
+    }
+  },
+  {
+    "content": "[5] Perf record: session=S2 kind=refactor module=module_5.py latency_ms=25 rows=105 retries=2",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 5 latency=25ms",
+    "tags": "refactor,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T10:15:00Z",
+      "numbers": {
+        "latency_ms": 25,
+        "rows": 105,
+        "retries": 2
+      },
+      "files": [
+        "src/module_5.py"
+      ],
+      "seed": 42,
+      "index": 5
+    }
+  },
+  {
+    "content": "[6] Perf record: session=S3 kind=decision module=module_6.py latency_ms=26 rows=106 retries=0",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 6 latency=26ms",
+    "tags": "decision,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T10:30:00Z",
+      "numbers": {
+        "latency_ms": 26,
+        "rows": 106,
+        "retries": 0
+      },
+      "files": [
+        "src/module_6.py"
+      ],
+      "seed": 42,
+      "index": 6
+    }
+  },
+  {
+    "content": "[7] Perf record: session=S4 kind=test module=module_7.py latency_ms=27 rows=107 retries=1",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 7 latency=27ms",
+    "tags": "test,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T10:45:00Z",
+      "numbers": {
+        "latency_ms": 27,
+        "rows": 107,
+        "retries": 1
+      },
+      "files": [
+        "src/module_7.py"
+      ],
+      "seed": 42,
+      "index": 7
+    }
+  },
+  {
+    "content": "[8] Perf record: session=S1 kind=note module=module_8.py latency_ms=28 rows=108 retries=2",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 8 latency=28ms",
+    "tags": "note,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T11:00:00Z",
+      "numbers": {
+        "latency_ms": 28,
+        "rows": 108,
+        "retries": 2
+      },
+      "files": [
+        "src/module_8.py"
+      ],
+      "seed": 42,
+      "index": 8
+    }
+  },
+  {
+    "content": "[9] Perf record: session=S2 kind=bugfix module=module_9.py latency_ms=29 rows=109 retries=0",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 9 latency=29ms",
+    "tags": "bugfix,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T11:15:00Z",
+      "numbers": {
+        "latency_ms": 29,
+        "rows": 109,
+        "retries": 0
+      },
+      "files": [
+        "src/module_9.py"
+      ],
+      "seed": 42,
+      "index": 9
+    }
+  },
+  {
+    "content": "[10] Perf record: session=S3 kind=feature module=module_10.py latency_ms=30 rows=110 retries=1",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 10 latency=30ms",
+    "tags": "feature,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T11:30:00Z",
+      "numbers": {
+        "latency_ms": 30,
+        "rows": 110,
+        "retries": 1
+      },
+      "files": [
+        "src/module_10.py"
+      ],
+      "seed": 42,
+      "index": 10
+    }
+  },
+  {
+    "content": "[11] Perf record: session=S4 kind=perf module=module_11.py latency_ms=31 rows=111 retries=2",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 11 latency=31ms",
+    "tags": "perf,benchmark",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T11:45:00Z",
+      "numbers": {
+        "latency_ms": 31,
+        "rows": 111,
+        "retries": 2
+      },
+      "files": [
+        "src/module_11.py"
+      ],
+      "seed": 42,
+      "index": 11
+    }
+  },
+  {
+    "content": "[12] Perf record: session=S1 kind=config module=module_12.py latency_ms=32 rows=112 retries=0",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 12 latency=32ms",
+    "tags": "config,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T12:00:00Z",
+      "numbers": {
+        "latency_ms": 32,
+        "rows": 112,
+        "retries": 0
+      },
+      "files": [
+        "src/module_12.py"
+      ],
+      "seed": 42,
+      "index": 12
+    }
+  },
+  {
+    "content": "[13] Perf record: session=S2 kind=refactor module=module_13.py latency_ms=33 rows=113 retries=1",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 13 latency=33ms",
+    "tags": "refactor,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T12:15:00Z",
+      "numbers": {
+        "latency_ms": 33,
+        "rows": 113,
+        "retries": 1
+      },
+      "files": [
+        "src/module_13.py"
+      ],
+      "seed": 42,
+      "index": 13
+    }
+  },
+  {
+    "content": "[14] Perf record: session=S3 kind=decision module=module_14.py latency_ms=34 rows=114 retries=2",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 14 latency=34ms",
+    "tags": "decision,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T12:30:00Z",
+      "numbers": {
+        "latency_ms": 34,
+        "rows": 114,
+        "retries": 2
+      },
+      "files": [
+        "src/module_14.py"
+      ],
+      "seed": 42,
+      "index": 14
+    }
+  },
+  {
+    "content": "[15] Perf record: session=S4 kind=test module=module_15.py latency_ms=35 rows=115 retries=0",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 15 latency=35ms",
+    "tags": "test,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T12:45:00Z",
+      "numbers": {
+        "latency_ms": 35,
+        "rows": 115,
+        "retries": 0
+      },
+      "files": [
+        "src/module_15.py"
+      ],
+      "seed": 42,
+      "index": 15
+    }
+  },
+  {
+    "content": "[16] Perf record: session=S1 kind=note module=module_16.py latency_ms=36 rows=116 retries=1",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 16 latency=36ms",
+    "tags": "note,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T13:00:00Z",
+      "numbers": {
+        "latency_ms": 36,
+        "rows": 116,
+        "retries": 1
+      },
+      "files": [
+        "src/module_16.py"
+      ],
+      "seed": 42,
+      "index": 16
+    }
+  },
+  {
+    "content": "[17] Perf record: session=S2 kind=bugfix module=module_17.py latency_ms=37 rows=117 retries=2",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 17 latency=37ms",
+    "tags": "bugfix,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T13:15:00Z",
+      "numbers": {
+        "latency_ms": 37,
+        "rows": 117,
+        "retries": 2
+      },
+      "files": [
+        "src/module_17.py"
+      ],
+      "seed": 42,
+      "index": 17
+    }
+  },
+  {
+    "content": "[18] Perf record: session=S3 kind=feature module=module_18.py latency_ms=38 rows=118 retries=0",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 18 latency=38ms",
+    "tags": "feature,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T13:30:00Z",
+      "numbers": {
+        "latency_ms": 38,
+        "rows": 118,
+        "retries": 0
+      },
+      "files": [
+        "src/module_18.py"
+      ],
+      "seed": 42,
+      "index": 18
+    }
+  },
+  {
+    "content": "[19] Perf record: session=S4 kind=perf module=module_19.py latency_ms=39 rows=119 retries=1",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 19 latency=39ms",
+    "tags": "perf,benchmark",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T13:45:00Z",
+      "numbers": {
+        "latency_ms": 39,
+        "rows": 119,
+        "retries": 1
+      },
+      "files": [
+        "src/module_19.py"
+      ],
+      "seed": 42,
+      "index": 19
+    }
+  },
+  {
+    "content": "[20] Perf record: session=S1 kind=config module=module_20.py latency_ms=40 rows=120 retries=2",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 20 latency=40ms",
+    "tags": "config,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T14:00:00Z",
+      "numbers": {
+        "latency_ms": 40,
+        "rows": 120,
+        "retries": 2
+      },
+      "files": [
+        "src/module_20.py"
+      ],
+      "seed": 42,
+      "index": 20
+    }
+  },
+  {
+    "content": "[21] Perf record: session=S2 kind=refactor module=module_21.py latency_ms=41 rows=121 retries=0",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 21 latency=41ms",
+    "tags": "refactor,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T14:15:00Z",
+      "numbers": {
+        "latency_ms": 41,
+        "rows": 121,
+        "retries": 0
+      },
+      "files": [
+        "src/module_21.py"
+      ],
+      "seed": 42,
+      "index": 21
+    }
+  },
+  {
+    "content": "[22] Perf record: session=S3 kind=decision module=module_22.py latency_ms=42 rows=122 retries=1",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 22 latency=42ms",
+    "tags": "decision,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T14:30:00Z",
+      "numbers": {
+        "latency_ms": 42,
+        "rows": 122,
+        "retries": 1
+      },
+      "files": [
+        "src/module_22.py"
+      ],
+      "seed": 42,
+      "index": 22
+    }
+  },
+  {
+    "content": "[23] Perf record: session=S4 kind=test module=module_23.py latency_ms=43 rows=123 retries=2",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 23 latency=43ms",
+    "tags": "test,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T14:45:00Z",
+      "numbers": {
+        "latency_ms": 43,
+        "rows": 123,
+        "retries": 2
+      },
+      "files": [
+        "src/module_23.py"
+      ],
+      "seed": 42,
+      "index": 23
+    }
+  },
+  {
+    "content": "[24] Perf record: session=S1 kind=note module=module_24.py latency_ms=44 rows=124 retries=0",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 24 latency=44ms",
+    "tags": "note,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T15:00:00Z",
+      "numbers": {
+        "latency_ms": 44,
+        "rows": 124,
+        "retries": 0
+      },
+      "files": [
+        "src/module_24.py"
+      ],
+      "seed": 42,
+      "index": 24
+    }
+  },
+  {
+    "content": "[25] Perf record: session=S2 kind=bugfix module=module_0.py latency_ms=45 rows=125 retries=1",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 25 latency=45ms",
+    "tags": "bugfix,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T15:15:00Z",
+      "numbers": {
+        "latency_ms": 45,
+        "rows": 125,
+        "retries": 1
+      },
+      "files": [
+        "src/module_0.py"
+      ],
+      "seed": 42,
+      "index": 25
+    }
+  },
+  {
+    "content": "[26] Perf record: session=S3 kind=feature module=module_1.py latency_ms=46 rows=126 retries=2",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 26 latency=46ms",
+    "tags": "feature,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T15:30:00Z",
+      "numbers": {
+        "latency_ms": 46,
+        "rows": 126,
+        "retries": 2
+      },
+      "files": [
+        "src/module_1.py"
+      ],
+      "seed": 42,
+      "index": 26
+    }
+  },
+  {
+    "content": "[27] Perf record: session=S4 kind=perf module=module_2.py latency_ms=47 rows=127 retries=0",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 27 latency=47ms",
+    "tags": "perf,benchmark",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T15:45:00Z",
+      "numbers": {
+        "latency_ms": 47,
+        "rows": 127,
+        "retries": 0
+      },
+      "files": [
+        "src/module_2.py"
+      ],
+      "seed": 42,
+      "index": 27
+    }
+  },
+  {
+    "content": "[28] Perf record: session=S1 kind=config module=module_3.py latency_ms=48 rows=128 retries=1",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 28 latency=48ms",
+    "tags": "config,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T16:00:00Z",
+      "numbers": {
+        "latency_ms": 48,
+        "rows": 128,
+        "retries": 1
+      },
+      "files": [
+        "src/module_3.py"
+      ],
+      "seed": 42,
+      "index": 28
+    }
+  },
+  {
+    "content": "[29] Perf record: session=S2 kind=refactor module=module_4.py latency_ms=49 rows=129 retries=2",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 29 latency=49ms",
+    "tags": "refactor,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T16:15:00Z",
+      "numbers": {
+        "latency_ms": 49,
+        "rows": 129,
+        "retries": 2
+      },
+      "files": [
+        "src/module_4.py"
+      ],
+      "seed": 42,
+      "index": 29
+    }
+  },
+  {
+    "content": "[30] Perf record: session=S3 kind=decision module=module_5.py latency_ms=50 rows=130 retries=0",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 30 latency=50ms",
+    "tags": "decision,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T16:30:00Z",
+      "numbers": {
+        "latency_ms": 50,
+        "rows": 130,
+        "retries": 0
+      },
+      "files": [
+        "src/module_5.py"
+      ],
+      "seed": 42,
+      "index": 30
+    }
+  },
+  {
+    "content": "[31] Perf record: session=S4 kind=test module=module_6.py latency_ms=51 rows=131 retries=1",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 31 latency=51ms",
+    "tags": "test,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T16:45:00Z",
+      "numbers": {
+        "latency_ms": 51,
+        "rows": 131,
+        "retries": 1
+      },
+      "files": [
+        "src/module_6.py"
+      ],
+      "seed": 42,
+      "index": 31
+    }
+  },
+  {
+    "content": "[32] Perf record: session=S1 kind=note module=module_7.py latency_ms=52 rows=132 retries=2",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 32 latency=52ms",
+    "tags": "note,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T17:00:00Z",
+      "numbers": {
+        "latency_ms": 52,
+        "rows": 132,
+        "retries": 2
+      },
+      "files": [
+        "src/module_7.py"
+      ],
+      "seed": 42,
+      "index": 32
+    }
+  },
+  {
+    "content": "[33] Perf record: session=S2 kind=bugfix module=module_8.py latency_ms=53 rows=133 retries=0",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 33 latency=53ms",
+    "tags": "bugfix,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T17:15:00Z",
+      "numbers": {
+        "latency_ms": 53,
+        "rows": 133,
+        "retries": 0
+      },
+      "files": [
+        "src/module_8.py"
+      ],
+      "seed": 42,
+      "index": 33
+    }
+  },
+  {
+    "content": "[34] Perf record: session=S3 kind=feature module=module_9.py latency_ms=54 rows=134 retries=1",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 34 latency=54ms",
+    "tags": "feature,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T17:30:00Z",
+      "numbers": {
+        "latency_ms": 54,
+        "rows": 134,
+        "retries": 1
+      },
+      "files": [
+        "src/module_9.py"
+      ],
+      "seed": 42,
+      "index": 34
+    }
+  },
+  {
+    "content": "[35] Perf record: session=S4 kind=perf module=module_10.py latency_ms=55 rows=135 retries=2",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 35 latency=55ms",
+    "tags": "perf,benchmark",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T17:45:00Z",
+      "numbers": {
+        "latency_ms": 55,
+        "rows": 135,
+        "retries": 2
+      },
+      "files": [
+        "src/module_10.py"
+      ],
+      "seed": 42,
+      "index": 35
+    }
+  },
+  {
+    "content": "[36] Perf record: session=S1 kind=config module=module_11.py latency_ms=56 rows=136 retries=0",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 36 latency=56ms",
+    "tags": "config,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T18:00:00Z",
+      "numbers": {
+        "latency_ms": 56,
+        "rows": 136,
+        "retries": 0
+      },
+      "files": [
+        "src/module_11.py"
+      ],
+      "seed": 42,
+      "index": 36
+    }
+  },
+  {
+    "content": "[37] Perf record: session=S2 kind=refactor module=module_12.py latency_ms=57 rows=137 retries=1",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 37 latency=57ms",
+    "tags": "refactor,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T18:15:00Z",
+      "numbers": {
+        "latency_ms": 57,
+        "rows": 137,
+        "retries": 1
+      },
+      "files": [
+        "src/module_12.py"
+      ],
+      "seed": 42,
+      "index": 37
+    }
+  },
+  {
+    "content": "[38] Perf record: session=S3 kind=decision module=module_13.py latency_ms=58 rows=138 retries=2",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 38 latency=58ms",
+    "tags": "decision,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T18:30:00Z",
+      "numbers": {
+        "latency_ms": 58,
+        "rows": 138,
+        "retries": 2
+      },
+      "files": [
+        "src/module_13.py"
+      ],
+      "seed": 42,
+      "index": 38
+    }
+  },
+  {
+    "content": "[39] Perf record: session=S4 kind=test module=module_14.py latency_ms=59 rows=139 retries=0",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 39 latency=59ms",
+    "tags": "test,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T18:45:00Z",
+      "numbers": {
+        "latency_ms": 59,
+        "rows": 139,
+        "retries": 0
+      },
+      "files": [
+        "src/module_14.py"
+      ],
+      "seed": 42,
+      "index": 39
+    }
+  },
+  {
+    "content": "[40] Perf record: session=S1 kind=note module=module_15.py latency_ms=60 rows=140 retries=1",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 40 latency=60ms",
+    "tags": "note,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T19:00:00Z",
+      "numbers": {
+        "latency_ms": 60,
+        "rows": 140,
+        "retries": 1
+      },
+      "files": [
+        "src/module_15.py"
+      ],
+      "seed": 42,
+      "index": 40
+    }
+  },
+  {
+    "content": "[41] Perf record: session=S2 kind=bugfix module=module_16.py latency_ms=61 rows=141 retries=2",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 41 latency=61ms",
+    "tags": "bugfix,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T19:15:00Z",
+      "numbers": {
+        "latency_ms": 61,
+        "rows": 141,
+        "retries": 2
+      },
+      "files": [
+        "src/module_16.py"
+      ],
+      "seed": 42,
+      "index": 41
+    }
+  },
+  {
+    "content": "[42] Perf record: session=S3 kind=feature module=module_17.py latency_ms=62 rows=142 retries=0",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 42 latency=62ms",
+    "tags": "feature,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T19:30:00Z",
+      "numbers": {
+        "latency_ms": 62,
+        "rows": 142,
+        "retries": 0
+      },
+      "files": [
+        "src/module_17.py"
+      ],
+      "seed": 42,
+      "index": 42
+    }
+  },
+  {
+    "content": "[43] Perf record: session=S4 kind=perf module=module_18.py latency_ms=63 rows=143 retries=1",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 43 latency=63ms",
+    "tags": "perf,benchmark",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T19:45:00Z",
+      "numbers": {
+        "latency_ms": 63,
+        "rows": 143,
+        "retries": 1
+      },
+      "files": [
+        "src/module_18.py"
+      ],
+      "seed": 42,
+      "index": 43
+    }
+  },
+  {
+    "content": "[44] Perf record: session=S1 kind=config module=module_19.py latency_ms=64 rows=144 retries=2",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 44 latency=64ms",
+    "tags": "config,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T20:00:00Z",
+      "numbers": {
+        "latency_ms": 64,
+        "rows": 144,
+        "retries": 2
+      },
+      "files": [
+        "src/module_19.py"
+      ],
+      "seed": 42,
+      "index": 44
+    }
+  },
+  {
+    "content": "[45] Perf record: session=S2 kind=refactor module=module_20.py latency_ms=65 rows=145 retries=0",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 45 latency=65ms",
+    "tags": "refactor,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T20:15:00Z",
+      "numbers": {
+        "latency_ms": 65,
+        "rows": 145,
+        "retries": 0
+      },
+      "files": [
+        "src/module_20.py"
+      ],
+      "seed": 42,
+      "index": 45
+    }
+  },
+  {
+    "content": "[46] Perf record: session=S3 kind=decision module=module_21.py latency_ms=66 rows=146 retries=1",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 46 latency=66ms",
+    "tags": "decision,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T20:30:00Z",
+      "numbers": {
+        "latency_ms": 66,
+        "rows": 146,
+        "retries": 1
+      },
+      "files": [
+        "src/module_21.py"
+      ],
+      "seed": 42,
+      "index": 46
+    }
+  },
+  {
+    "content": "[47] Perf record: session=S4 kind=test module=module_22.py latency_ms=67 rows=147 retries=2",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 47 latency=67ms",
+    "tags": "test,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T20:45:00Z",
+      "numbers": {
+        "latency_ms": 67,
+        "rows": 147,
+        "retries": 2
+      },
+      "files": [
+        "src/module_22.py"
+      ],
+      "seed": 42,
+      "index": 47
+    }
+  },
+  {
+    "content": "[48] Perf record: session=S1 kind=note module=module_23.py latency_ms=68 rows=148 retries=0",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 48 latency=68ms",
+    "tags": "note,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T21:00:00Z",
+      "numbers": {
+        "latency_ms": 68,
+        "rows": 148,
+        "retries": 0
+      },
+      "files": [
+        "src/module_23.py"
+      ],
+      "seed": 42,
+      "index": 48
+    }
+  },
+  {
+    "content": "[49] Perf record: session=S2 kind=bugfix module=module_24.py latency_ms=69 rows=149 retries=1",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 49 latency=69ms",
+    "tags": "bugfix,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T21:15:00Z",
+      "numbers": {
+        "latency_ms": 69,
+        "rows": 149,
+        "retries": 1
+      },
+      "files": [
+        "src/module_24.py"
+      ],
+      "seed": 42,
+      "index": 49
+    }
+  },
+  {
+    "content": "[50] Perf record: session=S3 kind=feature module=module_0.py latency_ms=70 rows=150 retries=2",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 50 latency=70ms",
+    "tags": "feature,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T21:30:00Z",
+      "numbers": {
+        "latency_ms": 70,
+        "rows": 150,
+        "retries": 2
+      },
+      "files": [
+        "src/module_0.py"
+      ],
+      "seed": 42,
+      "index": 50
+    }
+  },
+  {
+    "content": "[51] Perf record: session=S4 kind=perf module=module_1.py latency_ms=71 rows=151 retries=0",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 51 latency=71ms",
+    "tags": "perf,benchmark",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T21:45:00Z",
+      "numbers": {
+        "latency_ms": 71,
+        "rows": 151,
+        "retries": 0
+      },
+      "files": [
+        "src/module_1.py"
+      ],
+      "seed": 42,
+      "index": 51
+    }
+  },
+  {
+    "content": "[52] Perf record: session=S1 kind=config module=module_2.py latency_ms=72 rows=152 retries=1",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 52 latency=72ms",
+    "tags": "config,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T22:00:00Z",
+      "numbers": {
+        "latency_ms": 72,
+        "rows": 152,
+        "retries": 1
+      },
+      "files": [
+        "src/module_2.py"
+      ],
+      "seed": 42,
+      "index": 52
+    }
+  },
+  {
+    "content": "[53] Perf record: session=S2 kind=refactor module=module_3.py latency_ms=73 rows=153 retries=2",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 53 latency=73ms",
+    "tags": "refactor,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T22:15:00Z",
+      "numbers": {
+        "latency_ms": 73,
+        "rows": 153,
+        "retries": 2
+      },
+      "files": [
+        "src/module_3.py"
+      ],
+      "seed": 42,
+      "index": 53
+    }
+  },
+  {
+    "content": "[54] Perf record: session=S3 kind=decision module=module_4.py latency_ms=74 rows=154 retries=0",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 54 latency=74ms",
+    "tags": "decision,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T22:30:00Z",
+      "numbers": {
+        "latency_ms": 74,
+        "rows": 154,
+        "retries": 0
+      },
+      "files": [
+        "src/module_4.py"
+      ],
+      "seed": 42,
+      "index": 54
+    }
+  },
+  {
+    "content": "[55] Perf record: session=S4 kind=test module=module_5.py latency_ms=75 rows=155 retries=1",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 55 latency=75ms",
+    "tags": "test,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-01T22:45:00Z",
+      "numbers": {
+        "latency_ms": 75,
+        "rows": 155,
+        "retries": 1
+      },
+      "files": [
+        "src/module_5.py"
+      ],
+      "seed": 42,
+      "index": 55
+    }
+  },
+  {
+    "content": "[56] Perf record: session=S1 kind=note module=module_6.py latency_ms=76 rows=156 retries=2",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 56 latency=76ms",
+    "tags": "note,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-01T23:00:00Z",
+      "numbers": {
+        "latency_ms": 76,
+        "rows": 156,
+        "retries": 2
+      },
+      "files": [
+        "src/module_6.py"
+      ],
+      "seed": 42,
+      "index": 56
+    }
+  },
+  {
+    "content": "[57] Perf record: session=S2 kind=bugfix module=module_7.py latency_ms=77 rows=157 retries=0",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 57 latency=77ms",
+    "tags": "bugfix,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-01T23:15:00Z",
+      "numbers": {
+        "latency_ms": 77,
+        "rows": 157,
+        "retries": 0
+      },
+      "files": [
+        "src/module_7.py"
+      ],
+      "seed": 42,
+      "index": 57
+    }
+  },
+  {
+    "content": "[58] Perf record: session=S3 kind=feature module=module_8.py latency_ms=78 rows=158 retries=1",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 58 latency=78ms",
+    "tags": "feature,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-01T23:30:00Z",
+      "numbers": {
+        "latency_ms": 78,
+        "rows": 158,
+        "retries": 1
+      },
+      "files": [
+        "src/module_8.py"
+      ],
+      "seed": 42,
+      "index": 58
+    }
+  },
+  {
+    "content": "[59] Perf record: session=S4 kind=perf module=module_9.py latency_ms=79 rows=159 retries=2",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 59 latency=79ms",
+    "tags": "perf,benchmark",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-01T23:45:00Z",
+      "numbers": {
+        "latency_ms": 79,
+        "rows": 159,
+        "retries": 2
+      },
+      "files": [
+        "src/module_9.py"
+      ],
+      "seed": 42,
+      "index": 59
+    }
+  },
+  {
+    "content": "[60] Perf record: session=S1 kind=config module=module_10.py latency_ms=80 rows=160 retries=0",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 60 latency=80ms",
+    "tags": "config,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T00:00:00Z",
+      "numbers": {
+        "latency_ms": 80,
+        "rows": 160,
+        "retries": 0
+      },
+      "files": [
+        "src/module_10.py"
+      ],
+      "seed": 42,
+      "index": 60
+    }
+  },
+  {
+    "content": "[61] Perf record: session=S2 kind=refactor module=module_11.py latency_ms=81 rows=161 retries=1",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 61 latency=81ms",
+    "tags": "refactor,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T00:15:00Z",
+      "numbers": {
+        "latency_ms": 81,
+        "rows": 161,
+        "retries": 1
+      },
+      "files": [
+        "src/module_11.py"
+      ],
+      "seed": 42,
+      "index": 61
+    }
+  },
+  {
+    "content": "[62] Perf record: session=S3 kind=decision module=module_12.py latency_ms=82 rows=162 retries=2",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 62 latency=82ms",
+    "tags": "decision,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T00:30:00Z",
+      "numbers": {
+        "latency_ms": 82,
+        "rows": 162,
+        "retries": 2
+      },
+      "files": [
+        "src/module_12.py"
+      ],
+      "seed": 42,
+      "index": 62
+    }
+  },
+  {
+    "content": "[63] Perf record: session=S4 kind=test module=module_13.py latency_ms=83 rows=163 retries=0",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 63 latency=83ms",
+    "tags": "test,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T00:45:00Z",
+      "numbers": {
+        "latency_ms": 83,
+        "rows": 163,
+        "retries": 0
+      },
+      "files": [
+        "src/module_13.py"
+      ],
+      "seed": 42,
+      "index": 63
+    }
+  },
+  {
+    "content": "[64] Perf record: session=S1 kind=note module=module_14.py latency_ms=84 rows=164 retries=1",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 64 latency=84ms",
+    "tags": "note,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T01:00:00Z",
+      "numbers": {
+        "latency_ms": 84,
+        "rows": 164,
+        "retries": 1
+      },
+      "files": [
+        "src/module_14.py"
+      ],
+      "seed": 42,
+      "index": 64
+    }
+  },
+  {
+    "content": "[65] Perf record: session=S2 kind=bugfix module=module_15.py latency_ms=85 rows=165 retries=2",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 65 latency=85ms",
+    "tags": "bugfix,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T01:15:00Z",
+      "numbers": {
+        "latency_ms": 85,
+        "rows": 165,
+        "retries": 2
+      },
+      "files": [
+        "src/module_15.py"
+      ],
+      "seed": 42,
+      "index": 65
+    }
+  },
+  {
+    "content": "[66] Perf record: session=S3 kind=feature module=module_16.py latency_ms=86 rows=166 retries=0",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 66 latency=86ms",
+    "tags": "feature,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T01:30:00Z",
+      "numbers": {
+        "latency_ms": 86,
+        "rows": 166,
+        "retries": 0
+      },
+      "files": [
+        "src/module_16.py"
+      ],
+      "seed": 42,
+      "index": 66
+    }
+  },
+  {
+    "content": "[67] Perf record: session=S4 kind=perf module=module_17.py latency_ms=87 rows=167 retries=1",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 67 latency=87ms",
+    "tags": "perf,benchmark",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T01:45:00Z",
+      "numbers": {
+        "latency_ms": 87,
+        "rows": 167,
+        "retries": 1
+      },
+      "files": [
+        "src/module_17.py"
+      ],
+      "seed": 42,
+      "index": 67
+    }
+  },
+  {
+    "content": "[68] Perf record: session=S1 kind=config module=module_18.py latency_ms=88 rows=168 retries=2",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 68 latency=88ms",
+    "tags": "config,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T02:00:00Z",
+      "numbers": {
+        "latency_ms": 88,
+        "rows": 168,
+        "retries": 2
+      },
+      "files": [
+        "src/module_18.py"
+      ],
+      "seed": 42,
+      "index": 68
+    }
+  },
+  {
+    "content": "[69] Perf record: session=S2 kind=refactor module=module_19.py latency_ms=89 rows=169 retries=0",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 69 latency=89ms",
+    "tags": "refactor,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T02:15:00Z",
+      "numbers": {
+        "latency_ms": 89,
+        "rows": 169,
+        "retries": 0
+      },
+      "files": [
+        "src/module_19.py"
+      ],
+      "seed": 42,
+      "index": 69
+    }
+  },
+  {
+    "content": "[70] Perf record: session=S3 kind=decision module=module_20.py latency_ms=90 rows=170 retries=1",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 70 latency=90ms",
+    "tags": "decision,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T02:30:00Z",
+      "numbers": {
+        "latency_ms": 90,
+        "rows": 170,
+        "retries": 1
+      },
+      "files": [
+        "src/module_20.py"
+      ],
+      "seed": 42,
+      "index": 70
+    }
+  },
+  {
+    "content": "[71] Perf record: session=S4 kind=test module=module_21.py latency_ms=91 rows=171 retries=2",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 71 latency=91ms",
+    "tags": "test,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T02:45:00Z",
+      "numbers": {
+        "latency_ms": 91,
+        "rows": 171,
+        "retries": 2
+      },
+      "files": [
+        "src/module_21.py"
+      ],
+      "seed": 42,
+      "index": 71
+    }
+  },
+  {
+    "content": "[72] Perf record: session=S1 kind=note module=module_22.py latency_ms=92 rows=172 retries=0",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 72 latency=92ms",
+    "tags": "note,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T03:00:00Z",
+      "numbers": {
+        "latency_ms": 92,
+        "rows": 172,
+        "retries": 0
+      },
+      "files": [
+        "src/module_22.py"
+      ],
+      "seed": 42,
+      "index": 72
+    }
+  },
+  {
+    "content": "[73] Perf record: session=S2 kind=bugfix module=module_23.py latency_ms=93 rows=173 retries=1",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 73 latency=93ms",
+    "tags": "bugfix,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T03:15:00Z",
+      "numbers": {
+        "latency_ms": 93,
+        "rows": 173,
+        "retries": 1
+      },
+      "files": [
+        "src/module_23.py"
+      ],
+      "seed": 42,
+      "index": 73
+    }
+  },
+  {
+    "content": "[74] Perf record: session=S3 kind=feature module=module_24.py latency_ms=94 rows=174 retries=2",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 74 latency=94ms",
+    "tags": "feature,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T03:30:00Z",
+      "numbers": {
+        "latency_ms": 94,
+        "rows": 174,
+        "retries": 2
+      },
+      "files": [
+        "src/module_24.py"
+      ],
+      "seed": 42,
+      "index": 74
+    }
+  },
+  {
+    "content": "[75] Perf record: session=S4 kind=perf module=module_0.py latency_ms=95 rows=175 retries=0",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 75 latency=95ms",
+    "tags": "perf,benchmark",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T03:45:00Z",
+      "numbers": {
+        "latency_ms": 95,
+        "rows": 175,
+        "retries": 0
+      },
+      "files": [
+        "src/module_0.py"
+      ],
+      "seed": 42,
+      "index": 75
+    }
+  },
+  {
+    "content": "[76] Perf record: session=S1 kind=config module=module_1.py latency_ms=96 rows=176 retries=1",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 76 latency=96ms",
+    "tags": "config,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T04:00:00Z",
+      "numbers": {
+        "latency_ms": 96,
+        "rows": 176,
+        "retries": 1
+      },
+      "files": [
+        "src/module_1.py"
+      ],
+      "seed": 42,
+      "index": 76
+    }
+  },
+  {
+    "content": "[77] Perf record: session=S2 kind=refactor module=module_2.py latency_ms=97 rows=177 retries=2",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 77 latency=97ms",
+    "tags": "refactor,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T04:15:00Z",
+      "numbers": {
+        "latency_ms": 97,
+        "rows": 177,
+        "retries": 2
+      },
+      "files": [
+        "src/module_2.py"
+      ],
+      "seed": 42,
+      "index": 77
+    }
+  },
+  {
+    "content": "[78] Perf record: session=S3 kind=decision module=module_3.py latency_ms=98 rows=178 retries=0",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 78 latency=98ms",
+    "tags": "decision,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T04:30:00Z",
+      "numbers": {
+        "latency_ms": 98,
+        "rows": 178,
+        "retries": 0
+      },
+      "files": [
+        "src/module_3.py"
+      ],
+      "seed": 42,
+      "index": 78
+    }
+  },
+  {
+    "content": "[79] Perf record: session=S4 kind=test module=module_4.py latency_ms=99 rows=179 retries=1",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 79 latency=99ms",
+    "tags": "test,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T04:45:00Z",
+      "numbers": {
+        "latency_ms": 99,
+        "rows": 179,
+        "retries": 1
+      },
+      "files": [
+        "src/module_4.py"
+      ],
+      "seed": 42,
+      "index": 79
+    }
+  },
+  {
+    "content": "[80] Perf record: session=S1 kind=note module=module_5.py latency_ms=100 rows=180 retries=2",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 80 latency=100ms",
+    "tags": "note,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T05:00:00Z",
+      "numbers": {
+        "latency_ms": 100,
+        "rows": 180,
+        "retries": 2
+      },
+      "files": [
+        "src/module_5.py"
+      ],
+      "seed": 42,
+      "index": 80
+    }
+  },
+  {
+    "content": "[81] Perf record: session=S2 kind=bugfix module=module_6.py latency_ms=101 rows=181 retries=0",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 81 latency=101ms",
+    "tags": "bugfix,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T05:15:00Z",
+      "numbers": {
+        "latency_ms": 101,
+        "rows": 181,
+        "retries": 0
+      },
+      "files": [
+        "src/module_6.py"
+      ],
+      "seed": 42,
+      "index": 81
+    }
+  },
+  {
+    "content": "[82] Perf record: session=S3 kind=feature module=module_7.py latency_ms=102 rows=182 retries=1",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 82 latency=102ms",
+    "tags": "feature,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T05:30:00Z",
+      "numbers": {
+        "latency_ms": 102,
+        "rows": 182,
+        "retries": 1
+      },
+      "files": [
+        "src/module_7.py"
+      ],
+      "seed": 42,
+      "index": 82
+    }
+  },
+  {
+    "content": "[83] Perf record: session=S4 kind=perf module=module_8.py latency_ms=103 rows=183 retries=2",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 83 latency=103ms",
+    "tags": "perf,benchmark",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T05:45:00Z",
+      "numbers": {
+        "latency_ms": 103,
+        "rows": 183,
+        "retries": 2
+      },
+      "files": [
+        "src/module_8.py"
+      ],
+      "seed": 42,
+      "index": 83
+    }
+  },
+  {
+    "content": "[84] Perf record: session=S1 kind=config module=module_9.py latency_ms=104 rows=184 retries=0",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 84 latency=104ms",
+    "tags": "config,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T06:00:00Z",
+      "numbers": {
+        "latency_ms": 104,
+        "rows": 184,
+        "retries": 0
+      },
+      "files": [
+        "src/module_9.py"
+      ],
+      "seed": 42,
+      "index": 84
+    }
+  },
+  {
+    "content": "[85] Perf record: session=S2 kind=refactor module=module_10.py latency_ms=105 rows=185 retries=1",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 85 latency=105ms",
+    "tags": "refactor,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T06:15:00Z",
+      "numbers": {
+        "latency_ms": 105,
+        "rows": 185,
+        "retries": 1
+      },
+      "files": [
+        "src/module_10.py"
+      ],
+      "seed": 42,
+      "index": 85
+    }
+  },
+  {
+    "content": "[86] Perf record: session=S3 kind=decision module=module_11.py latency_ms=106 rows=186 retries=2",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 86 latency=106ms",
+    "tags": "decision,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T06:30:00Z",
+      "numbers": {
+        "latency_ms": 106,
+        "rows": 186,
+        "retries": 2
+      },
+      "files": [
+        "src/module_11.py"
+      ],
+      "seed": 42,
+      "index": 86
+    }
+  },
+  {
+    "content": "[87] Perf record: session=S4 kind=test module=module_12.py latency_ms=107 rows=187 retries=0",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 87 latency=107ms",
+    "tags": "test,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T06:45:00Z",
+      "numbers": {
+        "latency_ms": 107,
+        "rows": 187,
+        "retries": 0
+      },
+      "files": [
+        "src/module_12.py"
+      ],
+      "seed": 42,
+      "index": 87
+    }
+  },
+  {
+    "content": "[88] Perf record: session=S1 kind=note module=module_13.py latency_ms=108 rows=188 retries=1",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 88 latency=108ms",
+    "tags": "note,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T07:00:00Z",
+      "numbers": {
+        "latency_ms": 108,
+        "rows": 188,
+        "retries": 1
+      },
+      "files": [
+        "src/module_13.py"
+      ],
+      "seed": 42,
+      "index": 88
+    }
+  },
+  {
+    "content": "[89] Perf record: session=S2 kind=bugfix module=module_14.py latency_ms=109 rows=189 retries=2",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 89 latency=109ms",
+    "tags": "bugfix,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T07:15:00Z",
+      "numbers": {
+        "latency_ms": 109,
+        "rows": 189,
+        "retries": 2
+      },
+      "files": [
+        "src/module_14.py"
+      ],
+      "seed": 42,
+      "index": 89
+    }
+  },
+  {
+    "content": "[90] Perf record: session=S3 kind=feature module=module_15.py latency_ms=20 rows=190 retries=0",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 90 latency=20ms",
+    "tags": "feature,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T07:30:00Z",
+      "numbers": {
+        "latency_ms": 20,
+        "rows": 190,
+        "retries": 0
+      },
+      "files": [
+        "src/module_15.py"
+      ],
+      "seed": 42,
+      "index": 90
+    }
+  },
+  {
+    "content": "[91] Perf record: session=S4 kind=perf module=module_16.py latency_ms=21 rows=191 retries=1",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 91 latency=21ms",
+    "tags": "perf,benchmark",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T07:45:00Z",
+      "numbers": {
+        "latency_ms": 21,
+        "rows": 191,
+        "retries": 1
+      },
+      "files": [
+        "src/module_16.py"
+      ],
+      "seed": 42,
+      "index": 91
+    }
+  },
+  {
+    "content": "[92] Perf record: session=S1 kind=config module=module_17.py latency_ms=22 rows=192 retries=2",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 92 latency=22ms",
+    "tags": "config,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T08:00:00Z",
+      "numbers": {
+        "latency_ms": 22,
+        "rows": 192,
+        "retries": 2
+      },
+      "files": [
+        "src/module_17.py"
+      ],
+      "seed": 42,
+      "index": 92
+    }
+  },
+  {
+    "content": "[93] Perf record: session=S2 kind=refactor module=module_18.py latency_ms=23 rows=193 retries=0",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 93 latency=23ms",
+    "tags": "refactor,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T08:15:00Z",
+      "numbers": {
+        "latency_ms": 23,
+        "rows": 193,
+        "retries": 0
+      },
+      "files": [
+        "src/module_18.py"
+      ],
+      "seed": 42,
+      "index": 93
+    }
+  },
+  {
+    "content": "[94] Perf record: session=S3 kind=decision module=module_19.py latency_ms=24 rows=194 retries=1",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 94 latency=24ms",
+    "tags": "decision,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T08:30:00Z",
+      "numbers": {
+        "latency_ms": 24,
+        "rows": 194,
+        "retries": 1
+      },
+      "files": [
+        "src/module_19.py"
+      ],
+      "seed": 42,
+      "index": 94
+    }
+  },
+  {
+    "content": "[95] Perf record: session=S4 kind=test module=module_20.py latency_ms=25 rows=195 retries=2",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 95 latency=25ms",
+    "tags": "test,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T08:45:00Z",
+      "numbers": {
+        "latency_ms": 25,
+        "rows": 195,
+        "retries": 2
+      },
+      "files": [
+        "src/module_20.py"
+      ],
+      "seed": 42,
+      "index": 95
+    }
+  },
+  {
+    "content": "[96] Perf record: session=S1 kind=note module=module_21.py latency_ms=26 rows=196 retries=0",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 96 latency=26ms",
+    "tags": "note,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T09:00:00Z",
+      "numbers": {
+        "latency_ms": 26,
+        "rows": 196,
+        "retries": 0
+      },
+      "files": [
+        "src/module_21.py"
+      ],
+      "seed": 42,
+      "index": 96
+    }
+  },
+  {
+    "content": "[97] Perf record: session=S2 kind=bugfix module=module_22.py latency_ms=27 rows=197 retries=1",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 97 latency=27ms",
+    "tags": "bugfix,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T09:15:00Z",
+      "numbers": {
+        "latency_ms": 27,
+        "rows": 197,
+        "retries": 1
+      },
+      "files": [
+        "src/module_22.py"
+      ],
+      "seed": 42,
+      "index": 97
+    }
+  },
+  {
+    "content": "[98] Perf record: session=S3 kind=feature module=module_23.py latency_ms=28 rows=198 retries=2",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 98 latency=28ms",
+    "tags": "feature,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T09:30:00Z",
+      "numbers": {
+        "latency_ms": 28,
+        "rows": 198,
+        "retries": 2
+      },
+      "files": [
+        "src/module_23.py"
+      ],
+      "seed": 42,
+      "index": 98
+    }
+  },
+  {
+    "content": "[99] Perf record: session=S4 kind=perf module=module_24.py latency_ms=29 rows=199 retries=0",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 99 latency=29ms",
+    "tags": "perf,benchmark",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T09:45:00Z",
+      "numbers": {
+        "latency_ms": 29,
+        "rows": 199,
+        "retries": 0
+      },
+      "files": [
+        "src/module_24.py"
+      ],
+      "seed": 42,
+      "index": 99
+    }
+  },
+  {
+    "content": "[100] Perf record: session=S1 kind=config module=module_0.py latency_ms=30 rows=200 retries=1",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 100 latency=30ms",
+    "tags": "config,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T10:00:00Z",
+      "numbers": {
+        "latency_ms": 30,
+        "rows": 200,
+        "retries": 1
+      },
+      "files": [
+        "src/module_0.py"
+      ],
+      "seed": 42,
+      "index": 100
+    }
+  },
+  {
+    "content": "[101] Perf record: session=S2 kind=refactor module=module_1.py latency_ms=31 rows=201 retries=2",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 101 latency=31ms",
+    "tags": "refactor,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T10:15:00Z",
+      "numbers": {
+        "latency_ms": 31,
+        "rows": 201,
+        "retries": 2
+      },
+      "files": [
+        "src/module_1.py"
+      ],
+      "seed": 42,
+      "index": 101
+    }
+  },
+  {
+    "content": "[102] Perf record: session=S3 kind=decision module=module_2.py latency_ms=32 rows=202 retries=0",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 102 latency=32ms",
+    "tags": "decision,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T10:30:00Z",
+      "numbers": {
+        "latency_ms": 32,
+        "rows": 202,
+        "retries": 0
+      },
+      "files": [
+        "src/module_2.py"
+      ],
+      "seed": 42,
+      "index": 102
+    }
+  },
+  {
+    "content": "[103] Perf record: session=S4 kind=test module=module_3.py latency_ms=33 rows=203 retries=1",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 103 latency=33ms",
+    "tags": "test,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T10:45:00Z",
+      "numbers": {
+        "latency_ms": 33,
+        "rows": 203,
+        "retries": 1
+      },
+      "files": [
+        "src/module_3.py"
+      ],
+      "seed": 42,
+      "index": 103
+    }
+  },
+  {
+    "content": "[104] Perf record: session=S1 kind=note module=module_4.py latency_ms=34 rows=204 retries=2",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 104 latency=34ms",
+    "tags": "note,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T11:00:00Z",
+      "numbers": {
+        "latency_ms": 34,
+        "rows": 204,
+        "retries": 2
+      },
+      "files": [
+        "src/module_4.py"
+      ],
+      "seed": 42,
+      "index": 104
+    }
+  },
+  {
+    "content": "[105] Perf record: session=S2 kind=bugfix module=module_5.py latency_ms=35 rows=205 retries=0",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 105 latency=35ms",
+    "tags": "bugfix,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T11:15:00Z",
+      "numbers": {
+        "latency_ms": 35,
+        "rows": 205,
+        "retries": 0
+      },
+      "files": [
+        "src/module_5.py"
+      ],
+      "seed": 42,
+      "index": 105
+    }
+  },
+  {
+    "content": "[106] Perf record: session=S3 kind=feature module=module_6.py latency_ms=36 rows=206 retries=1",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 106 latency=36ms",
+    "tags": "feature,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T11:30:00Z",
+      "numbers": {
+        "latency_ms": 36,
+        "rows": 206,
+        "retries": 1
+      },
+      "files": [
+        "src/module_6.py"
+      ],
+      "seed": 42,
+      "index": 106
+    }
+  },
+  {
+    "content": "[107] Perf record: session=S4 kind=perf module=module_7.py latency_ms=37 rows=207 retries=2",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 107 latency=37ms",
+    "tags": "perf,benchmark",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T11:45:00Z",
+      "numbers": {
+        "latency_ms": 37,
+        "rows": 207,
+        "retries": 2
+      },
+      "files": [
+        "src/module_7.py"
+      ],
+      "seed": 42,
+      "index": 107
+    }
+  },
+  {
+    "content": "[108] Perf record: session=S1 kind=config module=module_8.py latency_ms=38 rows=208 retries=0",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 108 latency=38ms",
+    "tags": "config,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T12:00:00Z",
+      "numbers": {
+        "latency_ms": 38,
+        "rows": 208,
+        "retries": 0
+      },
+      "files": [
+        "src/module_8.py"
+      ],
+      "seed": 42,
+      "index": 108
+    }
+  },
+  {
+    "content": "[109] Perf record: session=S2 kind=refactor module=module_9.py latency_ms=39 rows=209 retries=1",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 109 latency=39ms",
+    "tags": "refactor,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T12:15:00Z",
+      "numbers": {
+        "latency_ms": 39,
+        "rows": 209,
+        "retries": 1
+      },
+      "files": [
+        "src/module_9.py"
+      ],
+      "seed": 42,
+      "index": 109
+    }
+  },
+  {
+    "content": "[110] Perf record: session=S3 kind=decision module=module_10.py latency_ms=40 rows=210 retries=2",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 110 latency=40ms",
+    "tags": "decision,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T12:30:00Z",
+      "numbers": {
+        "latency_ms": 40,
+        "rows": 210,
+        "retries": 2
+      },
+      "files": [
+        "src/module_10.py"
+      ],
+      "seed": 42,
+      "index": 110
+    }
+  },
+  {
+    "content": "[111] Perf record: session=S4 kind=test module=module_11.py latency_ms=41 rows=211 retries=0",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 111 latency=41ms",
+    "tags": "test,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T12:45:00Z",
+      "numbers": {
+        "latency_ms": 41,
+        "rows": 211,
+        "retries": 0
+      },
+      "files": [
+        "src/module_11.py"
+      ],
+      "seed": 42,
+      "index": 111
+    }
+  },
+  {
+    "content": "[112] Perf record: session=S1 kind=note module=module_12.py latency_ms=42 rows=212 retries=1",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 112 latency=42ms",
+    "tags": "note,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T13:00:00Z",
+      "numbers": {
+        "latency_ms": 42,
+        "rows": 212,
+        "retries": 1
+      },
+      "files": [
+        "src/module_12.py"
+      ],
+      "seed": 42,
+      "index": 112
+    }
+  },
+  {
+    "content": "[113] Perf record: session=S2 kind=bugfix module=module_13.py latency_ms=43 rows=213 retries=2",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 113 latency=43ms",
+    "tags": "bugfix,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T13:15:00Z",
+      "numbers": {
+        "latency_ms": 43,
+        "rows": 213,
+        "retries": 2
+      },
+      "files": [
+        "src/module_13.py"
+      ],
+      "seed": 42,
+      "index": 113
+    }
+  },
+  {
+    "content": "[114] Perf record: session=S3 kind=feature module=module_14.py latency_ms=44 rows=214 retries=0",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 114 latency=44ms",
+    "tags": "feature,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T13:30:00Z",
+      "numbers": {
+        "latency_ms": 44,
+        "rows": 214,
+        "retries": 0
+      },
+      "files": [
+        "src/module_14.py"
+      ],
+      "seed": 42,
+      "index": 114
+    }
+  },
+  {
+    "content": "[115] Perf record: session=S4 kind=perf module=module_15.py latency_ms=45 rows=215 retries=1",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 115 latency=45ms",
+    "tags": "perf,benchmark",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T13:45:00Z",
+      "numbers": {
+        "latency_ms": 45,
+        "rows": 215,
+        "retries": 1
+      },
+      "files": [
+        "src/module_15.py"
+      ],
+      "seed": 42,
+      "index": 115
+    }
+  },
+  {
+    "content": "[116] Perf record: session=S1 kind=config module=module_16.py latency_ms=46 rows=216 retries=2",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 116 latency=46ms",
+    "tags": "config,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T14:00:00Z",
+      "numbers": {
+        "latency_ms": 46,
+        "rows": 216,
+        "retries": 2
+      },
+      "files": [
+        "src/module_16.py"
+      ],
+      "seed": 42,
+      "index": 116
+    }
+  },
+  {
+    "content": "[117] Perf record: session=S2 kind=refactor module=module_17.py latency_ms=47 rows=217 retries=0",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 117 latency=47ms",
+    "tags": "refactor,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T14:15:00Z",
+      "numbers": {
+        "latency_ms": 47,
+        "rows": 217,
+        "retries": 0
+      },
+      "files": [
+        "src/module_17.py"
+      ],
+      "seed": 42,
+      "index": 117
+    }
+  },
+  {
+    "content": "[118] Perf record: session=S3 kind=decision module=module_18.py latency_ms=48 rows=218 retries=1",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 118 latency=48ms",
+    "tags": "decision,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T14:30:00Z",
+      "numbers": {
+        "latency_ms": 48,
+        "rows": 218,
+        "retries": 1
+      },
+      "files": [
+        "src/module_18.py"
+      ],
+      "seed": 42,
+      "index": 118
+    }
+  },
+  {
+    "content": "[119] Perf record: session=S4 kind=test module=module_19.py latency_ms=49 rows=219 retries=2",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 119 latency=49ms",
+    "tags": "test,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T14:45:00Z",
+      "numbers": {
+        "latency_ms": 49,
+        "rows": 219,
+        "retries": 2
+      },
+      "files": [
+        "src/module_19.py"
+      ],
+      "seed": 42,
+      "index": 119
+    }
+  },
+  {
+    "content": "[120] Perf record: session=S1 kind=note module=module_20.py latency_ms=50 rows=220 retries=0",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 120 latency=50ms",
+    "tags": "note,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T15:00:00Z",
+      "numbers": {
+        "latency_ms": 50,
+        "rows": 220,
+        "retries": 0
+      },
+      "files": [
+        "src/module_20.py"
+      ],
+      "seed": 42,
+      "index": 120
+    }
+  },
+  {
+    "content": "[121] Perf record: session=S2 kind=bugfix module=module_21.py latency_ms=51 rows=221 retries=1",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 121 latency=51ms",
+    "tags": "bugfix,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T15:15:00Z",
+      "numbers": {
+        "latency_ms": 51,
+        "rows": 221,
+        "retries": 1
+      },
+      "files": [
+        "src/module_21.py"
+      ],
+      "seed": 42,
+      "index": 121
+    }
+  },
+  {
+    "content": "[122] Perf record: session=S3 kind=feature module=module_22.py latency_ms=52 rows=222 retries=2",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 122 latency=52ms",
+    "tags": "feature,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T15:30:00Z",
+      "numbers": {
+        "latency_ms": 52,
+        "rows": 222,
+        "retries": 2
+      },
+      "files": [
+        "src/module_22.py"
+      ],
+      "seed": 42,
+      "index": 122
+    }
+  },
+  {
+    "content": "[123] Perf record: session=S4 kind=perf module=module_23.py latency_ms=53 rows=223 retries=0",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 123 latency=53ms",
+    "tags": "perf,benchmark",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T15:45:00Z",
+      "numbers": {
+        "latency_ms": 53,
+        "rows": 223,
+        "retries": 0
+      },
+      "files": [
+        "src/module_23.py"
+      ],
+      "seed": 42,
+      "index": 123
+    }
+  },
+  {
+    "content": "[124] Perf record: session=S1 kind=config module=module_24.py latency_ms=54 rows=224 retries=1",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 124 latency=54ms",
+    "tags": "config,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T16:00:00Z",
+      "numbers": {
+        "latency_ms": 54,
+        "rows": 224,
+        "retries": 1
+      },
+      "files": [
+        "src/module_24.py"
+      ],
+      "seed": 42,
+      "index": 124
+    }
+  },
+  {
+    "content": "[125] Perf record: session=S2 kind=refactor module=module_0.py latency_ms=55 rows=225 retries=2",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 125 latency=55ms",
+    "tags": "refactor,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T16:15:00Z",
+      "numbers": {
+        "latency_ms": 55,
+        "rows": 225,
+        "retries": 2
+      },
+      "files": [
+        "src/module_0.py"
+      ],
+      "seed": 42,
+      "index": 125
+    }
+  },
+  {
+    "content": "[126] Perf record: session=S3 kind=decision module=module_1.py latency_ms=56 rows=226 retries=0",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 126 latency=56ms",
+    "tags": "decision,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T16:30:00Z",
+      "numbers": {
+        "latency_ms": 56,
+        "rows": 226,
+        "retries": 0
+      },
+      "files": [
+        "src/module_1.py"
+      ],
+      "seed": 42,
+      "index": 126
+    }
+  },
+  {
+    "content": "[127] Perf record: session=S4 kind=test module=module_2.py latency_ms=57 rows=227 retries=1",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 127 latency=57ms",
+    "tags": "test,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T16:45:00Z",
+      "numbers": {
+        "latency_ms": 57,
+        "rows": 227,
+        "retries": 1
+      },
+      "files": [
+        "src/module_2.py"
+      ],
+      "seed": 42,
+      "index": 127
+    }
+  },
+  {
+    "content": "[128] Perf record: session=S1 kind=note module=module_3.py latency_ms=58 rows=228 retries=2",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 128 latency=58ms",
+    "tags": "note,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T17:00:00Z",
+      "numbers": {
+        "latency_ms": 58,
+        "rows": 228,
+        "retries": 2
+      },
+      "files": [
+        "src/module_3.py"
+      ],
+      "seed": 42,
+      "index": 128
+    }
+  },
+  {
+    "content": "[129] Perf record: session=S2 kind=bugfix module=module_4.py latency_ms=59 rows=229 retries=0",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 129 latency=59ms",
+    "tags": "bugfix,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T17:15:00Z",
+      "numbers": {
+        "latency_ms": 59,
+        "rows": 229,
+        "retries": 0
+      },
+      "files": [
+        "src/module_4.py"
+      ],
+      "seed": 42,
+      "index": 129
+    }
+  },
+  {
+    "content": "[130] Perf record: session=S3 kind=feature module=module_5.py latency_ms=60 rows=230 retries=1",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 130 latency=60ms",
+    "tags": "feature,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T17:30:00Z",
+      "numbers": {
+        "latency_ms": 60,
+        "rows": 230,
+        "retries": 1
+      },
+      "files": [
+        "src/module_5.py"
+      ],
+      "seed": 42,
+      "index": 130
+    }
+  },
+  {
+    "content": "[131] Perf record: session=S4 kind=perf module=module_6.py latency_ms=61 rows=231 retries=2",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 131 latency=61ms",
+    "tags": "perf,benchmark",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T17:45:00Z",
+      "numbers": {
+        "latency_ms": 61,
+        "rows": 231,
+        "retries": 2
+      },
+      "files": [
+        "src/module_6.py"
+      ],
+      "seed": 42,
+      "index": 131
+    }
+  },
+  {
+    "content": "[132] Perf record: session=S1 kind=config module=module_7.py latency_ms=62 rows=232 retries=0",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 132 latency=62ms",
+    "tags": "config,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T18:00:00Z",
+      "numbers": {
+        "latency_ms": 62,
+        "rows": 232,
+        "retries": 0
+      },
+      "files": [
+        "src/module_7.py"
+      ],
+      "seed": 42,
+      "index": 132
+    }
+  },
+  {
+    "content": "[133] Perf record: session=S2 kind=refactor module=module_8.py latency_ms=63 rows=233 retries=1",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 133 latency=63ms",
+    "tags": "refactor,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T18:15:00Z",
+      "numbers": {
+        "latency_ms": 63,
+        "rows": 233,
+        "retries": 1
+      },
+      "files": [
+        "src/module_8.py"
+      ],
+      "seed": 42,
+      "index": 133
+    }
+  },
+  {
+    "content": "[134] Perf record: session=S3 kind=decision module=module_9.py latency_ms=64 rows=234 retries=2",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 134 latency=64ms",
+    "tags": "decision,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T18:30:00Z",
+      "numbers": {
+        "latency_ms": 64,
+        "rows": 234,
+        "retries": 2
+      },
+      "files": [
+        "src/module_9.py"
+      ],
+      "seed": 42,
+      "index": 134
+    }
+  },
+  {
+    "content": "[135] Perf record: session=S4 kind=test module=module_10.py latency_ms=65 rows=235 retries=0",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 135 latency=65ms",
+    "tags": "test,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T18:45:00Z",
+      "numbers": {
+        "latency_ms": 65,
+        "rows": 235,
+        "retries": 0
+      },
+      "files": [
+        "src/module_10.py"
+      ],
+      "seed": 42,
+      "index": 135
+    }
+  },
+  {
+    "content": "[136] Perf record: session=S1 kind=note module=module_11.py latency_ms=66 rows=236 retries=1",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 136 latency=66ms",
+    "tags": "note,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T19:00:00Z",
+      "numbers": {
+        "latency_ms": 66,
+        "rows": 236,
+        "retries": 1
+      },
+      "files": [
+        "src/module_11.py"
+      ],
+      "seed": 42,
+      "index": 136
+    }
+  },
+  {
+    "content": "[137] Perf record: session=S2 kind=bugfix module=module_12.py latency_ms=67 rows=237 retries=2",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 137 latency=67ms",
+    "tags": "bugfix,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T19:15:00Z",
+      "numbers": {
+        "latency_ms": 67,
+        "rows": 237,
+        "retries": 2
+      },
+      "files": [
+        "src/module_12.py"
+      ],
+      "seed": 42,
+      "index": 137
+    }
+  },
+  {
+    "content": "[138] Perf record: session=S3 kind=feature module=module_13.py latency_ms=68 rows=238 retries=0",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 138 latency=68ms",
+    "tags": "feature,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T19:30:00Z",
+      "numbers": {
+        "latency_ms": 68,
+        "rows": 238,
+        "retries": 0
+      },
+      "files": [
+        "src/module_13.py"
+      ],
+      "seed": 42,
+      "index": 138
+    }
+  },
+  {
+    "content": "[139] Perf record: session=S4 kind=perf module=module_14.py latency_ms=69 rows=239 retries=1",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 139 latency=69ms",
+    "tags": "perf,benchmark",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T19:45:00Z",
+      "numbers": {
+        "latency_ms": 69,
+        "rows": 239,
+        "retries": 1
+      },
+      "files": [
+        "src/module_14.py"
+      ],
+      "seed": 42,
+      "index": 139
+    }
+  },
+  {
+    "content": "[140] Perf record: session=S1 kind=config module=module_15.py latency_ms=70 rows=240 retries=2",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 140 latency=70ms",
+    "tags": "config,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T20:00:00Z",
+      "numbers": {
+        "latency_ms": 70,
+        "rows": 240,
+        "retries": 2
+      },
+      "files": [
+        "src/module_15.py"
+      ],
+      "seed": 42,
+      "index": 140
+    }
+  },
+  {
+    "content": "[141] Perf record: session=S2 kind=refactor module=module_16.py latency_ms=71 rows=241 retries=0",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 141 latency=71ms",
+    "tags": "refactor,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T20:15:00Z",
+      "numbers": {
+        "latency_ms": 71,
+        "rows": 241,
+        "retries": 0
+      },
+      "files": [
+        "src/module_16.py"
+      ],
+      "seed": 42,
+      "index": 141
+    }
+  },
+  {
+    "content": "[142] Perf record: session=S3 kind=decision module=module_17.py latency_ms=72 rows=242 retries=1",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 142 latency=72ms",
+    "tags": "decision,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T20:30:00Z",
+      "numbers": {
+        "latency_ms": 72,
+        "rows": 242,
+        "retries": 1
+      },
+      "files": [
+        "src/module_17.py"
+      ],
+      "seed": 42,
+      "index": 142
+    }
+  },
+  {
+    "content": "[143] Perf record: session=S4 kind=test module=module_18.py latency_ms=73 rows=243 retries=2",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 143 latency=73ms",
+    "tags": "test,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T20:45:00Z",
+      "numbers": {
+        "latency_ms": 73,
+        "rows": 243,
+        "retries": 2
+      },
+      "files": [
+        "src/module_18.py"
+      ],
+      "seed": 42,
+      "index": 143
+    }
+  },
+  {
+    "content": "[144] Perf record: session=S1 kind=note module=module_19.py latency_ms=74 rows=244 retries=0",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 144 latency=74ms",
+    "tags": "note,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T21:00:00Z",
+      "numbers": {
+        "latency_ms": 74,
+        "rows": 244,
+        "retries": 0
+      },
+      "files": [
+        "src/module_19.py"
+      ],
+      "seed": 42,
+      "index": 144
+    }
+  },
+  {
+    "content": "[145] Perf record: session=S2 kind=bugfix module=module_20.py latency_ms=75 rows=245 retries=1",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 145 latency=75ms",
+    "tags": "bugfix,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T21:15:00Z",
+      "numbers": {
+        "latency_ms": 75,
+        "rows": 245,
+        "retries": 1
+      },
+      "files": [
+        "src/module_20.py"
+      ],
+      "seed": 42,
+      "index": 145
+    }
+  },
+  {
+    "content": "[146] Perf record: session=S3 kind=feature module=module_21.py latency_ms=76 rows=246 retries=2",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 146 latency=76ms",
+    "tags": "feature,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T21:30:00Z",
+      "numbers": {
+        "latency_ms": 76,
+        "rows": 246,
+        "retries": 2
+      },
+      "files": [
+        "src/module_21.py"
+      ],
+      "seed": 42,
+      "index": 146
+    }
+  },
+  {
+    "content": "[147] Perf record: session=S4 kind=perf module=module_22.py latency_ms=77 rows=247 retries=0",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 147 latency=77ms",
+    "tags": "perf,benchmark",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T21:45:00Z",
+      "numbers": {
+        "latency_ms": 77,
+        "rows": 247,
+        "retries": 0
+      },
+      "files": [
+        "src/module_22.py"
+      ],
+      "seed": 42,
+      "index": 147
+    }
+  },
+  {
+    "content": "[148] Perf record: session=S1 kind=config module=module_23.py latency_ms=78 rows=248 retries=1",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 148 latency=78ms",
+    "tags": "config,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T22:00:00Z",
+      "numbers": {
+        "latency_ms": 78,
+        "rows": 248,
+        "retries": 1
+      },
+      "files": [
+        "src/module_23.py"
+      ],
+      "seed": 42,
+      "index": 148
+    }
+  },
+  {
+    "content": "[149] Perf record: session=S2 kind=refactor module=module_24.py latency_ms=79 rows=249 retries=2",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 149 latency=79ms",
+    "tags": "refactor,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T22:15:00Z",
+      "numbers": {
+        "latency_ms": 79,
+        "rows": 249,
+        "retries": 2
+      },
+      "files": [
+        "src/module_24.py"
+      ],
+      "seed": 42,
+      "index": 149
+    }
+  },
+  {
+    "content": "[150] Perf record: session=S3 kind=decision module=module_0.py latency_ms=80 rows=250 retries=0",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 150 latency=80ms",
+    "tags": "decision,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T22:30:00Z",
+      "numbers": {
+        "latency_ms": 80,
+        "rows": 250,
+        "retries": 0
+      },
+      "files": [
+        "src/module_0.py"
+      ],
+      "seed": 42,
+      "index": 150
+    }
+  },
+  {
+    "content": "[151] Perf record: session=S4 kind=test module=module_1.py latency_ms=81 rows=251 retries=1",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 151 latency=81ms",
+    "tags": "test,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-02T22:45:00Z",
+      "numbers": {
+        "latency_ms": 81,
+        "rows": 251,
+        "retries": 1
+      },
+      "files": [
+        "src/module_1.py"
+      ],
+      "seed": 42,
+      "index": 151
+    }
+  },
+  {
+    "content": "[152] Perf record: session=S1 kind=note module=module_2.py latency_ms=82 rows=252 retries=2",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 152 latency=82ms",
+    "tags": "note,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-02T23:00:00Z",
+      "numbers": {
+        "latency_ms": 82,
+        "rows": 252,
+        "retries": 2
+      },
+      "files": [
+        "src/module_2.py"
+      ],
+      "seed": 42,
+      "index": 152
+    }
+  },
+  {
+    "content": "[153] Perf record: session=S2 kind=bugfix module=module_3.py latency_ms=83 rows=253 retries=0",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 153 latency=83ms",
+    "tags": "bugfix,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-02T23:15:00Z",
+      "numbers": {
+        "latency_ms": 83,
+        "rows": 253,
+        "retries": 0
+      },
+      "files": [
+        "src/module_3.py"
+      ],
+      "seed": 42,
+      "index": 153
+    }
+  },
+  {
+    "content": "[154] Perf record: session=S3 kind=feature module=module_4.py latency_ms=84 rows=254 retries=1",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 154 latency=84ms",
+    "tags": "feature,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-02T23:30:00Z",
+      "numbers": {
+        "latency_ms": 84,
+        "rows": 254,
+        "retries": 1
+      },
+      "files": [
+        "src/module_4.py"
+      ],
+      "seed": 42,
+      "index": 154
+    }
+  },
+  {
+    "content": "[155] Perf record: session=S4 kind=perf module=module_5.py latency_ms=85 rows=255 retries=2",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 155 latency=85ms",
+    "tags": "perf,benchmark",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-02T23:45:00Z",
+      "numbers": {
+        "latency_ms": 85,
+        "rows": 255,
+        "retries": 2
+      },
+      "files": [
+        "src/module_5.py"
+      ],
+      "seed": 42,
+      "index": 155
+    }
+  },
+  {
+    "content": "[156] Perf record: session=S1 kind=config module=module_6.py latency_ms=86 rows=256 retries=0",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 156 latency=86ms",
+    "tags": "config,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-03T00:00:00Z",
+      "numbers": {
+        "latency_ms": 86,
+        "rows": 256,
+        "retries": 0
+      },
+      "files": [
+        "src/module_6.py"
+      ],
+      "seed": 42,
+      "index": 156
+    }
+  },
+  {
+    "content": "[157] Perf record: session=S2 kind=refactor module=module_7.py latency_ms=87 rows=257 retries=1",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 157 latency=87ms",
+    "tags": "refactor,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-03T00:15:00Z",
+      "numbers": {
+        "latency_ms": 87,
+        "rows": 257,
+        "retries": 1
+      },
+      "files": [
+        "src/module_7.py"
+      ],
+      "seed": 42,
+      "index": 157
+    }
+  },
+  {
+    "content": "[158] Perf record: session=S3 kind=decision module=module_8.py latency_ms=88 rows=258 retries=2",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 158 latency=88ms",
+    "tags": "decision,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-03T00:30:00Z",
+      "numbers": {
+        "latency_ms": 88,
+        "rows": 258,
+        "retries": 2
+      },
+      "files": [
+        "src/module_8.py"
+      ],
+      "seed": 42,
+      "index": 158
+    }
+  },
+  {
+    "content": "[159] Perf record: session=S4 kind=test module=module_9.py latency_ms=89 rows=259 retries=0",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 159 latency=89ms",
+    "tags": "test,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-03T00:45:00Z",
+      "numbers": {
+        "latency_ms": 89,
+        "rows": 259,
+        "retries": 0
+      },
+      "files": [
+        "src/module_9.py"
+      ],
+      "seed": 42,
+      "index": 159
+    }
+  },
+  {
+    "content": "[160] Perf record: session=S1 kind=note module=module_10.py latency_ms=90 rows=260 retries=1",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 160 latency=90ms",
+    "tags": "note,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-03T01:00:00Z",
+      "numbers": {
+        "latency_ms": 90,
+        "rows": 260,
+        "retries": 1
+      },
+      "files": [
+        "src/module_10.py"
+      ],
+      "seed": 42,
+      "index": 160
+    }
+  },
+  {
+    "content": "[161] Perf record: session=S2 kind=bugfix module=module_11.py latency_ms=91 rows=261 retries=2",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 161 latency=91ms",
+    "tags": "bugfix,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-03T01:15:00Z",
+      "numbers": {
+        "latency_ms": 91,
+        "rows": 261,
+        "retries": 2
+      },
+      "files": [
+        "src/module_11.py"
+      ],
+      "seed": 42,
+      "index": 161
+    }
+  },
+  {
+    "content": "[162] Perf record: session=S3 kind=feature module=module_12.py latency_ms=92 rows=262 retries=0",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 162 latency=92ms",
+    "tags": "feature,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-03T01:30:00Z",
+      "numbers": {
+        "latency_ms": 92,
+        "rows": 262,
+        "retries": 0
+      },
+      "files": [
+        "src/module_12.py"
+      ],
+      "seed": 42,
+      "index": 162
+    }
+  },
+  {
+    "content": "[163] Perf record: session=S4 kind=perf module=module_13.py latency_ms=93 rows=263 retries=1",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 163 latency=93ms",
+    "tags": "perf,benchmark",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-03T01:45:00Z",
+      "numbers": {
+        "latency_ms": 93,
+        "rows": 263,
+        "retries": 1
+      },
+      "files": [
+        "src/module_13.py"
+      ],
+      "seed": 42,
+      "index": 163
+    }
+  },
+  {
+    "content": "[164] Perf record: session=S1 kind=config module=module_14.py latency_ms=94 rows=264 retries=2",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 164 latency=94ms",
+    "tags": "config,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-03T02:00:00Z",
+      "numbers": {
+        "latency_ms": 94,
+        "rows": 264,
+        "retries": 2
+      },
+      "files": [
+        "src/module_14.py"
+      ],
+      "seed": 42,
+      "index": 164
+    }
+  },
+  {
+    "content": "[165] Perf record: session=S2 kind=refactor module=module_15.py latency_ms=95 rows=265 retries=0",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 165 latency=95ms",
+    "tags": "refactor,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-03T02:15:00Z",
+      "numbers": {
+        "latency_ms": 95,
+        "rows": 265,
+        "retries": 0
+      },
+      "files": [
+        "src/module_15.py"
+      ],
+      "seed": 42,
+      "index": 165
+    }
+  },
+  {
+    "content": "[166] Perf record: session=S3 kind=decision module=module_16.py latency_ms=96 rows=266 retries=1",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 166 latency=96ms",
+    "tags": "decision,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-03T02:30:00Z",
+      "numbers": {
+        "latency_ms": 96,
+        "rows": 266,
+        "retries": 1
+      },
+      "files": [
+        "src/module_16.py"
+      ],
+      "seed": 42,
+      "index": 166
+    }
+  },
+  {
+    "content": "[167] Perf record: session=S4 kind=test module=module_17.py latency_ms=97 rows=267 retries=2",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 167 latency=97ms",
+    "tags": "test,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-03T02:45:00Z",
+      "numbers": {
+        "latency_ms": 97,
+        "rows": 267,
+        "retries": 2
+      },
+      "files": [
+        "src/module_17.py"
+      ],
+      "seed": 42,
+      "index": 167
+    }
+  },
+  {
+    "content": "[168] Perf record: session=S1 kind=note module=module_18.py latency_ms=98 rows=268 retries=0",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 168 latency=98ms",
+    "tags": "note,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-03T03:00:00Z",
+      "numbers": {
+        "latency_ms": 98,
+        "rows": 268,
+        "retries": 0
+      },
+      "files": [
+        "src/module_18.py"
+      ],
+      "seed": 42,
+      "index": 168
+    }
+  },
+  {
+    "content": "[169] Perf record: session=S2 kind=bugfix module=module_19.py latency_ms=99 rows=269 retries=1",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 169 latency=99ms",
+    "tags": "bugfix,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-03T03:15:00Z",
+      "numbers": {
+        "latency_ms": 99,
+        "rows": 269,
+        "retries": 1
+      },
+      "files": [
+        "src/module_19.py"
+      ],
+      "seed": 42,
+      "index": 169
+    }
+  },
+  {
+    "content": "[170] Perf record: session=S3 kind=feature module=module_20.py latency_ms=100 rows=270 retries=2",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 170 latency=100ms",
+    "tags": "feature,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-03T03:30:00Z",
+      "numbers": {
+        "latency_ms": 100,
+        "rows": 270,
+        "retries": 2
+      },
+      "files": [
+        "src/module_20.py"
+      ],
+      "seed": 42,
+      "index": 170
+    }
+  },
+  {
+    "content": "[171] Perf record: session=S4 kind=perf module=module_21.py latency_ms=101 rows=271 retries=0",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 171 latency=101ms",
+    "tags": "perf,benchmark",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-03T03:45:00Z",
+      "numbers": {
+        "latency_ms": 101,
+        "rows": 271,
+        "retries": 0
+      },
+      "files": [
+        "src/module_21.py"
+      ],
+      "seed": 42,
+      "index": 171
+    }
+  },
+  {
+    "content": "[172] Perf record: session=S1 kind=config module=module_22.py latency_ms=102 rows=272 retries=1",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 172 latency=102ms",
+    "tags": "config,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-03T04:00:00Z",
+      "numbers": {
+        "latency_ms": 102,
+        "rows": 272,
+        "retries": 1
+      },
+      "files": [
+        "src/module_22.py"
+      ],
+      "seed": 42,
+      "index": 172
+    }
+  },
+  {
+    "content": "[173] Perf record: session=S2 kind=refactor module=module_23.py latency_ms=103 rows=273 retries=2",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 173 latency=103ms",
+    "tags": "refactor,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-03T04:15:00Z",
+      "numbers": {
+        "latency_ms": 103,
+        "rows": 273,
+        "retries": 2
+      },
+      "files": [
+        "src/module_23.py"
+      ],
+      "seed": 42,
+      "index": 173
+    }
+  },
+  {
+    "content": "[174] Perf record: session=S3 kind=decision module=module_24.py latency_ms=104 rows=274 retries=0",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 174 latency=104ms",
+    "tags": "decision,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-03T04:30:00Z",
+      "numbers": {
+        "latency_ms": 104,
+        "rows": 274,
+        "retries": 0
+      },
+      "files": [
+        "src/module_24.py"
+      ],
+      "seed": 42,
+      "index": 174
+    }
+  },
+  {
+    "content": "[175] Perf record: session=S4 kind=test module=module_0.py latency_ms=105 rows=275 retries=1",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 175 latency=105ms",
+    "tags": "test,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-03T04:45:00Z",
+      "numbers": {
+        "latency_ms": 105,
+        "rows": 275,
+        "retries": 1
+      },
+      "files": [
+        "src/module_0.py"
+      ],
+      "seed": 42,
+      "index": 175
+    }
+  },
+  {
+    "content": "[176] Perf record: session=S1 kind=note module=module_1.py latency_ms=106 rows=276 retries=2",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 176 latency=106ms",
+    "tags": "note,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-03T05:00:00Z",
+      "numbers": {
+        "latency_ms": 106,
+        "rows": 276,
+        "retries": 2
+      },
+      "files": [
+        "src/module_1.py"
+      ],
+      "seed": 42,
+      "index": 176
+    }
+  },
+  {
+    "content": "[177] Perf record: session=S2 kind=bugfix module=module_2.py latency_ms=107 rows=277 retries=0",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 177 latency=107ms",
+    "tags": "bugfix,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-03T05:15:00Z",
+      "numbers": {
+        "latency_ms": 107,
+        "rows": 277,
+        "retries": 0
+      },
+      "files": [
+        "src/module_2.py"
+      ],
+      "seed": 42,
+      "index": 177
+    }
+  },
+  {
+    "content": "[178] Perf record: session=S3 kind=feature module=module_3.py latency_ms=108 rows=278 retries=1",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 178 latency=108ms",
+    "tags": "feature,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-03T05:30:00Z",
+      "numbers": {
+        "latency_ms": 108,
+        "rows": 278,
+        "retries": 1
+      },
+      "files": [
+        "src/module_3.py"
+      ],
+      "seed": 42,
+      "index": 178
+    }
+  },
+  {
+    "content": "[179] Perf record: session=S4 kind=perf module=module_4.py latency_ms=109 rows=279 retries=2",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 179 latency=109ms",
+    "tags": "perf,benchmark",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-03T05:45:00Z",
+      "numbers": {
+        "latency_ms": 109,
+        "rows": 279,
+        "retries": 2
+      },
+      "files": [
+        "src/module_4.py"
+      ],
+      "seed": 42,
+      "index": 179
+    }
+  },
+  {
+    "content": "[180] Perf record: session=S1 kind=config module=module_5.py latency_ms=20 rows=280 retries=0",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 180 latency=20ms",
+    "tags": "config,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-03T06:00:00Z",
+      "numbers": {
+        "latency_ms": 20,
+        "rows": 280,
+        "retries": 0
+      },
+      "files": [
+        "src/module_5.py"
+      ],
+      "seed": 42,
+      "index": 180
+    }
+  },
+  {
+    "content": "[181] Perf record: session=S2 kind=refactor module=module_6.py latency_ms=21 rows=281 retries=1",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 181 latency=21ms",
+    "tags": "refactor,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-03T06:15:00Z",
+      "numbers": {
+        "latency_ms": 21,
+        "rows": 281,
+        "retries": 1
+      },
+      "files": [
+        "src/module_6.py"
+      ],
+      "seed": 42,
+      "index": 181
+    }
+  },
+  {
+    "content": "[182] Perf record: session=S3 kind=decision module=module_7.py latency_ms=22 rows=282 retries=2",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 182 latency=22ms",
+    "tags": "decision,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-03T06:30:00Z",
+      "numbers": {
+        "latency_ms": 22,
+        "rows": 282,
+        "retries": 2
+      },
+      "files": [
+        "src/module_7.py"
+      ],
+      "seed": 42,
+      "index": 182
+    }
+  },
+  {
+    "content": "[183] Perf record: session=S4 kind=test module=module_8.py latency_ms=23 rows=283 retries=0",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 183 latency=23ms",
+    "tags": "test,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-03T06:45:00Z",
+      "numbers": {
+        "latency_ms": 23,
+        "rows": 283,
+        "retries": 0
+      },
+      "files": [
+        "src/module_8.py"
+      ],
+      "seed": 42,
+      "index": 183
+    }
+  },
+  {
+    "content": "[184] Perf record: session=S1 kind=note module=module_9.py latency_ms=24 rows=284 retries=1",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 184 latency=24ms",
+    "tags": "note,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-03T07:00:00Z",
+      "numbers": {
+        "latency_ms": 24,
+        "rows": 284,
+        "retries": 1
+      },
+      "files": [
+        "src/module_9.py"
+      ],
+      "seed": 42,
+      "index": 184
+    }
+  },
+  {
+    "content": "[185] Perf record: session=S2 kind=bugfix module=module_10.py latency_ms=25 rows=285 retries=2",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 185 latency=25ms",
+    "tags": "bugfix,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-03T07:15:00Z",
+      "numbers": {
+        "latency_ms": 25,
+        "rows": 285,
+        "retries": 2
+      },
+      "files": [
+        "src/module_10.py"
+      ],
+      "seed": 42,
+      "index": 185
+    }
+  },
+  {
+    "content": "[186] Perf record: session=S3 kind=feature module=module_11.py latency_ms=26 rows=286 retries=0",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 186 latency=26ms",
+    "tags": "feature,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-03T07:30:00Z",
+      "numbers": {
+        "latency_ms": 26,
+        "rows": 286,
+        "retries": 0
+      },
+      "files": [
+        "src/module_11.py"
+      ],
+      "seed": 42,
+      "index": 186
+    }
+  },
+  {
+    "content": "[187] Perf record: session=S4 kind=perf module=module_12.py latency_ms=27 rows=287 retries=1",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 187 latency=27ms",
+    "tags": "perf,benchmark",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-03T07:45:00Z",
+      "numbers": {
+        "latency_ms": 27,
+        "rows": 287,
+        "retries": 1
+      },
+      "files": [
+        "src/module_12.py"
+      ],
+      "seed": 42,
+      "index": 187
+    }
+  },
+  {
+    "content": "[188] Perf record: session=S1 kind=config module=module_13.py latency_ms=28 rows=288 retries=2",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 188 latency=28ms",
+    "tags": "config,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-03T08:00:00Z",
+      "numbers": {
+        "latency_ms": 28,
+        "rows": 288,
+        "retries": 2
+      },
+      "files": [
+        "src/module_13.py"
+      ],
+      "seed": 42,
+      "index": 188
+    }
+  },
+  {
+    "content": "[189] Perf record: session=S2 kind=refactor module=module_14.py latency_ms=29 rows=289 retries=0",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 189 latency=29ms",
+    "tags": "refactor,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-03T08:15:00Z",
+      "numbers": {
+        "latency_ms": 29,
+        "rows": 289,
+        "retries": 0
+      },
+      "files": [
+        "src/module_14.py"
+      ],
+      "seed": 42,
+      "index": 189
+    }
+  },
+  {
+    "content": "[190] Perf record: session=S3 kind=decision module=module_15.py latency_ms=30 rows=290 retries=1",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 190 latency=30ms",
+    "tags": "decision,sample",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-03T08:30:00Z",
+      "numbers": {
+        "latency_ms": 30,
+        "rows": 290,
+        "retries": 1
+      },
+      "files": [
+        "src/module_15.py"
+      ],
+      "seed": 42,
+      "index": 190
+    }
+  },
+  {
+    "content": "[191] Perf record: session=S4 kind=test module=module_16.py latency_ms=31 rows=291 retries=2",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 191 latency=31ms",
+    "tags": "test,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-03T08:45:00Z",
+      "numbers": {
+        "latency_ms": 31,
+        "rows": 291,
+        "retries": 2
+      },
+      "files": [
+        "src/module_16.py"
+      ],
+      "seed": 42,
+      "index": 191
+    }
+  },
+  {
+    "content": "[192] Perf record: session=S1 kind=note module=module_17.py latency_ms=32 rows=292 retries=0",
+    "session_id": "S1",
+    "kind": "note",
+    "summary": "Perf record 192 latency=32ms",
+    "tags": "note,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-03T09:00:00Z",
+      "numbers": {
+        "latency_ms": 32,
+        "rows": 292,
+        "retries": 0
+      },
+      "files": [
+        "src/module_17.py"
+      ],
+      "seed": 42,
+      "index": 192
+    }
+  },
+  {
+    "content": "[193] Perf record: session=S2 kind=bugfix module=module_18.py latency_ms=33 rows=293 retries=1",
+    "session_id": "S2",
+    "kind": "bugfix",
+    "summary": "Perf record 193 latency=33ms",
+    "tags": "bugfix,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-03T09:15:00Z",
+      "numbers": {
+        "latency_ms": 33,
+        "rows": 293,
+        "retries": 1
+      },
+      "files": [
+        "src/module_18.py"
+      ],
+      "seed": 42,
+      "index": 193
+    }
+  },
+  {
+    "content": "[194] Perf record: session=S3 kind=feature module=module_19.py latency_ms=34 rows=294 retries=2",
+    "session_id": "S3",
+    "kind": "feature",
+    "summary": "Perf record 194 latency=34ms",
+    "tags": "feature,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-03T09:30:00Z",
+      "numbers": {
+        "latency_ms": 34,
+        "rows": 294,
+        "retries": 2
+      },
+      "files": [
+        "src/module_19.py"
+      ],
+      "seed": 42,
+      "index": 194
+    }
+  },
+  {
+    "content": "[195] Perf record: session=S4 kind=perf module=module_20.py latency_ms=35 rows=295 retries=0",
+    "session_id": "S4",
+    "kind": "perf",
+    "summary": "Perf record 195 latency=35ms",
+    "tags": "perf,benchmark",
+    "priority": 1,
+    "metadata": {
+      "event_time": "2025-02-03T09:45:00Z",
+      "numbers": {
+        "latency_ms": 35,
+        "rows": 295,
+        "retries": 0
+      },
+      "files": [
+        "src/module_20.py"
+      ],
+      "seed": 42,
+      "index": 195
+    }
+  },
+  {
+    "content": "[196] Perf record: session=S1 kind=config module=module_21.py latency_ms=36 rows=296 retries=1",
+    "session_id": "S1",
+    "kind": "config",
+    "summary": "Perf record 196 latency=36ms",
+    "tags": "config,sample",
+    "priority": 2,
+    "metadata": {
+      "event_time": "2025-02-03T10:00:00Z",
+      "numbers": {
+        "latency_ms": 36,
+        "rows": 296,
+        "retries": 1
+      },
+      "files": [
+        "src/module_21.py"
+      ],
+      "seed": 42,
+      "index": 196
+    }
+  },
+  {
+    "content": "[197] Perf record: session=S2 kind=refactor module=module_22.py latency_ms=37 rows=297 retries=2",
+    "session_id": "S2",
+    "kind": "refactor",
+    "summary": "Perf record 197 latency=37ms",
+    "tags": "refactor,sample",
+    "priority": 3,
+    "metadata": {
+      "event_time": "2025-02-03T10:15:00Z",
+      "numbers": {
+        "latency_ms": 37,
+        "rows": 297,
+        "retries": 2
+      },
+      "files": [
+        "src/module_22.py"
+      ],
+      "seed": 42,
+      "index": 197
+    }
+  },
+  {
+    "content": "[198] Perf record: session=S3 kind=decision module=module_23.py latency_ms=38 rows=298 retries=0",
+    "session_id": "S3",
+    "kind": "decision",
+    "summary": "Perf record 198 latency=38ms",
+    "tags": "decision,sample",
+    "priority": 4,
+    "metadata": {
+      "event_time": "2025-02-03T10:30:00Z",
+      "numbers": {
+        "latency_ms": 38,
+        "rows": 298,
+        "retries": 0
+      },
+      "files": [
+        "src/module_23.py"
+      ],
+      "seed": 42,
+      "index": 198
+    }
+  },
+  {
+    "content": "[199] Perf record: session=S4 kind=test module=module_24.py latency_ms=39 rows=299 retries=1",
+    "session_id": "S4",
+    "kind": "test",
+    "summary": "Perf record 199 latency=39ms",
+    "tags": "test,sample",
+    "priority": 5,
+    "metadata": {
+      "event_time": "2025-02-03T10:45:00Z",
+      "numbers": {
+        "latency_ms": 39,
+        "rows": 299,
+        "retries": 1
+      },
+      "files": [
+        "src/module_24.py"
+      ],
+      "seed": 42,
+      "index": 199
+    }
+  }
+]

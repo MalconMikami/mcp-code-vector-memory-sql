@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "code-memory"
+version = "0.1.0"
+description = "Local MCP memory server for OpenCode using SQLite + sqlite-vec."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp",
+    "fastembed",
+    "sqlite-vec",
+]
+
+[project.optional-dependencies]
+graph = ["tree-sitter", "tree-sitter-languages"]
+summary = ["llama-cpp-python"]
+dev = ["pytest"]
+
+[project.scripts]
+code-memory = "code_memory.server:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["code_memory*"]
