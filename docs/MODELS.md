@@ -24,11 +24,11 @@ python -c "from fastembed import TextEmbedding; print([m['model'] for m in TextE
 The best model depends on your tradeoff between speed, memory, and retrieval
 quality.
 
-| Model | Why you would pick it |
-| --- | --- |
-| `BAAI/bge-small-en-v1.5` (default) | Very fast on CPU, small vectors (384-dim), strong baseline for English developer workflows |
-| `snowflake/snowflake-arctic-embed-s` | Quality-focused model while still keeping 384-dim vectors; good general semantic retrieval |
-| `nomic-ai/nomic-embed-text-v1.5` | Larger 768-dim model that handles long inputs (8192 token truncation) better; useful for longer context chunks |
+| Model | Dimensions | Est. RAM | Max tokens | Why you would pick it |
+| --- | ---: | ---: | ---: | --- |
+| `BAAI/bge-small-en-v1.5` (default) | 384 | ~100MB | 512 | Pure speed: great cost/benefit for simple CPUs and low-latency developer workflows |
+| `snowflake/snowflake-arctic-embed-s` | 384 | ~110MB | 512 | Technical precision: often better for structured/technical retrieval (symbols, function names) when BGE feels "confused" |
+| `nomic-ai/nomic-embed-text-v1.5` | 768 | ~280MB | 8192 | Huge window: index longer chunks (long docs / larger files) with less truncation; higher RAM and you must set `CODE_MEMORY_EMBED_DIM=768` |
 
 Notes:
 
@@ -76,15 +76,57 @@ Checklist:
 Local summaries are optional and run via `llama-cpp-python`. Any GGUF model that
 works with llama.cpp should work here.
 
-### `Qwen2.5-Coder-0.5B`
+Summary models are **separate** from embedding models:
 
-`Qwen2.5-Coder-0.5B` is a good default when you want:
+- Embeddings: `CODE_MEMORY_EMBED_MODEL` / `CODE_MEMORY_EMBED_DIM`
+- Local summaries: `CODE_MEMORY_SUMMARY_MODEL`
 
-- very fast local summaries on CPU
-- code-aware text generation
-- low RAM usage
+### Recommended GGUF options (nano + small)
 
-Tradeoff: being very small, it can be less accurate/robust than larger models.
+Model sizes and RAM usage vary by quantization, context size, and runtime
+settings. The ranges below are meant as practical starting points for local
+summaries.
+
+| Model | Size (typical) | Est. RAM | Best for | Why you would pick it |
+| --- | ---: | ---: | --- | --- |
+| `Qwen2.5-Coder-0.5B-Instruct` | ~350MB (Q4_K_M) / ~450MB (Q8_0) | ~400-480MB | Fast local summaries for code/logs | One of the strongest nano code-oriented models; usually distinguishes errors vs logs well |
+| `SmolLM2-360M-Instruct` | ~200MB (Q4_K_M) to ~380MB (FP16) | ~250-300MB | Stability-first summarization | Extremely small and fast; great for summarizing retrieved text (RAG output) when you are tight on RAM |
+| `Granite-3.0-2B-Instruct` (mobile quant) | ~480MB (IQ2_XS / IQ3_M) | ~450-500MB+ | Higher quality summaries (if you can afford it) | Stronger technical/corporate language, but risky under a strict ~500MB total budget |
+
+Note: the Granite option can exceed a 500MB budget quickly depending on
+`CODE_MEMORY_SUMMARY_CTX`, thread count, and what else is running in the same
+process/machine.
+
+### Nano vs small models
+
+`mcp-code-vector-memory-sql` supports both **nano** and **small** GGUF models for
+summarization (and anything larger that fits your machine).
+
+Practical tradeoffs:
+
+- **Nano (~0.5B-1B)**: fastest and lowest RAM; best for short, consistent summaries
+- **Small (~1B-7B)**: better accuracy/robustness; slower and uses more RAM
+
+### Tuning (important knobs)
+
+The most useful knobs for summary speed/quality:
+
+- `CODE_MEMORY_SUMMARY_CTX`: context size (higher uses more RAM)
+- `CODE_MEMORY_SUMMARY_THREADS`: CPU parallelism
+- `CODE_MEMORY_SUMMARY_MAX_TOKENS`: cap summary length
+- `CODE_MEMORY_SUMMARY_TEMPERATURE` / `CODE_MEMORY_SUMMARY_TOP_P`: determinism vs creativity
+- `CODE_MEMORY_SUMMARY_PROMPT`: keep it strict (1-3 sentences)
+
+Example:
+
+```json
+{
+  "CODE_MEMORY_SUMMARY_MODEL": "C:/models/qwen2.5-coder-0.5b-instruct.gguf",
+  "CODE_MEMORY_SUMMARY_THREADS": "6",
+  "CODE_MEMORY_SUMMARY_TEMPERATURE": "0.2",
+  "CODE_MEMORY_SUMMARY_MAX_TOKENS": "200"
+}
+```
 
 ### Finding GGUF models
 

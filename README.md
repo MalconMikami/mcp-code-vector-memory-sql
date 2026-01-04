@@ -1,14 +1,13 @@
 <div align="center">
-  <img src="logo-256.png" width="160" height="160" alt="mcp-code-vector-memory-sql logo" />
+  <img src="logo-256.png" width="256" height="256" alt="mcp-code-vector-memory-sql logo" />
 </div>
 
 # mcp-code-vector-memory-sql
 
-Local MCP memory server for OpenCode/VS Code powered by SQLite + sqlite-vec.
+Local MCP memory server for OpenCode/VS Code, Cline, Roo Code, Claude Desktop, OpenHands, Aider, Cursor, Gider, Windsurf, PydanticAI, LangGraph, CrewA powered by SQLite + sqlite-vec.
 It provides session-scoped memory with semantic search, optional FTS5 re-ranking,
 and optional local summaries (GGUF).
 
-Python module: `code_memory` · Console script: `code-memory`
 
 Inspired by:
 - `mcp-memory-libsql` (libSQL + vector search)
@@ -17,12 +16,13 @@ Inspired by:
 ## Table of contents
 
 - [Why](#why)
+- [How it works](#how-it-works)
+- [Hybrid search (vectors + FTS + optional graph)](#hybrid-search-vectors--fts--optional-graph)
 - [Key features](#key-features)
-- [Quick start](#quick-start)
-- [MCP configuration](#mcp-configuration)
+- [Install](#install)
+- [MCP setup](#mcp-setup)
 - [Configuration](#configuration)
 - [Models (embeddings + local summaries)](#models-embeddings--local-summaries)
-- [How it works](#how-it-works)
 - [MCP tools](#mcp-tools)
 - [Data model](#data-model)
 - [Comparison](#comparison)
@@ -41,6 +41,35 @@ When you use an MCP client while coding, you often need memory that is:
 
 `mcp-code-vector-memory-sql` focuses on that workflow.
 
+## How it works
+
+## Hybrid search (vectors + FTS + optional graph)
+
+`mcp-code-vector-memory-sql` combines multiple retrieval signals to get better "developer
+memory" results:
+
+- **Vector search**: semantic similarity (sqlite-vec)
+- **FTS5** (optional): exact/fuzzy term matches, merged into results
+- **Graph** (optional): entity-centric lookup via `get_context_graph`
+
+If you want to understand the full retrieval pipeline and ranking details, see
+[docs/HYBRID_SEARCH.md](docs/HYBRID_SEARCH.md) and [docs/TUNING_GUIDE.md](docs/TUNING_GUIDE.md).
+
+### `remember`
+
+1. Resolve `session_id` (input, MCP context, or `CODE_MEMORY_SESSION_ID`)
+2. Filter sensitive content + skip recent duplicates
+3. Generate optional local summary and basic tags
+4. Store in SQLite (+ vector index and FTS index if enabled)
+5. Optionally extract entities and update the knowledge graph
+
+### `search_memory`
+
+1. Create an embedding for the query (if vector search is enabled)
+2. Retrieve candidates (oversample) and merge optional FTS hits
+3. Re-rank with recency/priority and optional FTS bonus
+4. Apply `top_p` (recency filter) and return the top results
+
 ## Key features
 
 - Session-scoped storage (`session_id` is required)
@@ -50,11 +79,11 @@ When you use an MCP client while coding, you often need memory that is:
 - Optional local summarization via GGUF (`llama-cpp-python`)
 - Sensitive-content filter + recent dedupe (hash window)
 
-## Quick start
+## Install
 
 Requirements: Python 3.10+.
 
-Install:
+From source:
 
 ```bash
 python -m venv .venv
@@ -71,7 +100,7 @@ Optional extras:
 pip install -e ".[graph,summary]"
 ```
 
-Run:
+Run manually (useful for debugging):
 
 ```bash
 python -m code_memory
@@ -83,7 +112,11 @@ Legacy entrypoint (kept for compatibility):
 python main.py
 ```
 
-## MCP configuration
+## MCP setup
+
+Below are configuration examples for popular MCP clients.
+
+### OpenCode / VS Code
 
 Example `opencode.json`:
 
@@ -116,9 +149,60 @@ If you install the package globally, you can use the console script:
 }
 ```
 
+### Cline configuration
+
+Add this to your Cline MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "mcp-code-vector-memory-sql": {
+      "command": "python",
+      "args": ["-m", "code_memory"],
+      "env": {
+        "CODE_MEMORY_DB_DIR": "/path/to/your/workspace",
+        "CODE_MEMORY_LOG_DIR": "/path/to/logs"
+      }
+    }
+  }
+}
+```
+
+### Claude Desktop with WSL configuration
+
+If you run Claude Desktop on Windows and want the server inside WSL, configure
+Claude Desktop to call `wsl.exe` and start the Python module there.
+
+Example:
+
+```json
+{
+  "mcpServers": {
+    "mcp-code-vector-memory-sql": {
+      "command": "wsl.exe",
+      "args": [
+        "bash",
+        "-lc",
+        "cd /path/to/your/repo && source .venv/bin/activate && python -m code_memory"
+      ],
+      "env": {
+        "CODE_MEMORY_DB_DIR": "/path/to/your/workspace",
+        "CODE_MEMORY_LOG_DIR": "/path/to/logs"
+      }
+    }
+  }
+}
+```
+
+Notes:
+
+- WSL uses Linux paths (for example `/home/you/...`), not `C:\\...`.
+- If you do not use a venv in WSL, remove `source .venv/bin/activate` and ensure
+  `python` can import `code_memory`.
+
 ## Configuration
 
-Full reference (detailed explanations + more examples): `docs/CONFIGURATION.md`.
+Full reference (detailed explanations + more examples): [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
 
 ### Common env vars (most people only change these)
 
@@ -157,7 +241,7 @@ Disable the graph (default) and tune search a bit:
 
 ## Models (embeddings + local summaries)
 
-Detailed guide: `docs/MODELS.md`.
+Detailed guide: [docs/MODELS.md](docs/MODELS.md).
 
 ### Embedding models (fastembed)
 
@@ -175,24 +259,9 @@ Note: some models (e.g. `Qwen2.5-Embedding-0.6B`) are not supported by
 Any GGUF model supported by `llama-cpp-python` can be used for local summaries,
 including small code-focused models like `Qwen2.5-Coder-0.5B` (very fast).
 
-## How it works
-
-### `remember`
-
-1. Resolve `session_id` (input, MCP context, or `CODE_MEMORY_SESSION_ID`)
-2. Filter sensitive content + skip recent duplicates
-3. Generate optional local summary and basic tags
-4. Store in SQLite (+ vector index and FTS index if enabled)
-5. Optionally extract entities and update the knowledge graph
-
-### `search_memory`
-
-1. Create an embedding for the query (if vector search is enabled)
-2. Retrieve candidates (oversample) and merge optional FTS hits
-3. Re-rank with recency/priority and optional FTS bonus
-4. Apply `top_p` (recency filter) and return the top results
-
 ## MCP tools
+
+Full reference (inputs/outputs/examples): [docs/API.md](docs/API.md).
 
 - `remember(content, session_id, kind, summary, tags, priority, metadata_json)`
 - `search_memory(query, session_id, limit, top_p)`
@@ -230,11 +299,14 @@ Note: comparison is based on the published READMEs of those projects.
 
 ## Docs
 
-- `docs/README.md` (index)
-- `docs/CONFIGURATION.md` (full configuration reference)
-- `docs/MODELS.md` (choosing models)
-- `docs/ARCHITECTURE.md` (design + schema)
-- `docs/OPERATIONS.md` (maintenance + troubleshooting)
+- [Docs index](docs/README.md)
+- [MCP tools API](docs/API.md)
+- [Configuration](docs/CONFIGURATION.md)
+- [Models](docs/MODELS.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Hybrid search](docs/HYBRID_SEARCH.md)
+- [Tuning guide](docs/TUNING_GUIDE.md)
+- [Operations](docs/OPERATIONS.md)
 
 ## Development
 

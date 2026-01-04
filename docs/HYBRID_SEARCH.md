@@ -7,7 +7,8 @@ memory" results:
 - **FTS5** (optional): exact/fuzzy term matches, merged into results
 - **Graph** (optional): entity-centric lookup via `get_context_graph`
 
-This document explains the retrieval pipeline and how to tune it.
+This document explains the retrieval pipeline. For tuning, see
+`docs/TUNING_GUIDE.md`.
 
 ## What happens during `search_memory`
 
@@ -43,49 +44,9 @@ Vectors are great at "meaning", but code workflows also need exact matches:
 FTS complements vectors by making sure exact tokens can still surface, and then
 the combined ranking decides what should come first.
 
-## Tuning guide
+## Tuning
 
-All tuning is done via environment variables. Full reference:
-`docs/CONFIGURATION.md`.
-
-### Candidate set size: `CODE_MEMORY_TOP_K` + `CODE_MEMORY_OVERSAMPLE_K`
-
-- `CODE_MEMORY_TOP_K` is the default `limit` when the client does not pass one
-- `CODE_MEMORY_OVERSAMPLE_K` controls how many candidates you retrieve before
-  re-ranking:
-  - candidates = `limit * oversample_k`
-
-Tradeoff:
-
-- Higher oversample can improve recall (more candidates to re-rank)
-- Too high increases CPU/DB work
-
-### Recency filtering: `CODE_MEMORY_TOP_P`
-
-After ranking, `top_p` keeps only the newest fraction of the candidate set.
-
-Practical use:
-
-- Set `top_p` closer to `1.0` if you want older-but-relevant memories to still
-  appear
-- Keep it lower (for example `0.5` to `0.7`) if you mostly care about "what just
-  happened" in the current session
-
-### Priority vs recency: `CODE_MEMORY_PRIORITY_WEIGHT` and `CODE_MEMORY_RECENCY_WEIGHT`
-
-`mcp-code-vector-memory-sql` uses a 1..5 priority scale (1 is most important).
-
-- Increase `CODE_MEMORY_PRIORITY_WEIGHT` if you want "high priority" memories to
-  remain near the top even when older
-- Increase `CODE_MEMORY_RECENCY_WEIGHT` if you want newer memories to dominate
-
-### FTS preference: `CODE_MEMORY_FTS_BONUS`
-
-FTS hits get a score bonus (lower is better).
-
-- Increase `CODE_MEMORY_FTS_BONUS` if exact term matches should outrank purely
-  semantic matches
-- Keep it smaller if you find FTS "overpowers" semantic retrieval
+See `docs/TUNING_GUIDE.md`.
 
 ## Feature flags and behavior changes
 
