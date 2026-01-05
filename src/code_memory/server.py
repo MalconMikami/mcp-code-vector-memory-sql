@@ -13,6 +13,7 @@ from .config import (
     EMBED_MODEL_NAME,
     ENABLE_FTS,
     ENABLE_GRAPH,
+    ENABLE_SESSION_SCOPE,
     ENABLE_VEC,
     FTS_BONUS,
     LOG_FILE,
@@ -405,8 +406,8 @@ def search_memory(
                 "ctx_session_id": getattr(ctx, "session_id", None) if ctx else None,
             },
         )
-        resolved_session_id = _resolve_session_id(session_id, ctx)
-        if not resolved_session_id:
+        resolved_session_id = _resolve_session_id(session_id, ctx) if ENABLE_SESSION_SCOPE else None
+        if ENABLE_SESSION_SCOPE and not resolved_session_id:
             out = {"status": "error", "error": "session_id is required", "tool": "search_memory"}
             _log_tool_io("search_memory", "out", out)
             return out
@@ -788,7 +789,7 @@ def diagnostics() -> dict:
             "db_path": str(DB_PATH),
             "model": EMBED_MODEL_NAME,
             "model_cache_dir": str(MODEL_CACHE_DIR),
-            "flags": {"vec": ENABLE_VEC, "fts": ENABLE_FTS, "graph": ENABLE_GRAPH},
+            "flags": {"vec": ENABLE_VEC, "fts": ENABLE_FTS, "graph": ENABLE_GRAPH, "session_scope": ENABLE_SESSION_SCOPE},
             "defaults": {
                 "top_k": DEFAULT_TOP_K,
                 "top_p": DEFAULT_TOP_P,
@@ -842,7 +843,7 @@ def health() -> dict:
             "priority_weight": PRIORITY_WEIGHT,
             "fts_bonus": FTS_BONUS,
             "oversample_k": OVERSAMPLE_K,
-            "flags": {"vec": ENABLE_VEC, "fts": ENABLE_FTS, "graph": ENABLE_GRAPH},
+            "flags": {"vec": ENABLE_VEC, "fts": ENABLE_FTS, "graph": ENABLE_GRAPH, "session_scope": ENABLE_SESSION_SCOPE},
             "summary": {
                 "enabled": _summary_enabled(),
                 "model": SUMMARY_MODEL,
