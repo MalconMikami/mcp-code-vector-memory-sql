@@ -5,6 +5,16 @@ behavior notes and practical examples.
 
 If you are looking for a shorter overview, see `README.md`.
 
+## Configuration sources and precedence
+
+`mcp-code-vector-memory-sql` can read configuration from:
+
+1. Environment variables (highest priority)
+2. A JSONC config file at `src/code-vector-memory.jsonc` (supports `//` comments)
+3. Code defaults (lowest priority)
+
+If a key exists in the JSON config file with value `null`, it is treated as "not set".
+
 ## Storage and workspace
 
 ### `CODE_MEMORY_DB_PATH`
@@ -279,11 +289,27 @@ Local summaries are optional and require a GGUF file on disk.
 
 Full path to a GGUF model file. If unset, local summaries are disabled.
 
+Behavior:
+
+- If `CODE_MEMORY_SUMMARY_MODEL` is not set, local summaries are disabled.
+- If `CODE_MEMORY_SUMMARY_MODEL` is set to a local `.gguf` path, that file is used.
+- If `CODE_MEMORY_SUMMARY_MODEL` is set to a Hugging Face repo id (for example
+  `Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF`), the server will download a suitable
+  `.gguf` from that repo into `CODE_MEMORY_MODEL_DIR/gguf` (prefers `Q4_K_M` when available).
+
 Example:
 
 ```json
 {
   "CODE_MEMORY_SUMMARY_MODEL": "C:/models/qwen2.5-coder-0.5b-instruct.gguf"
+}
+```
+
+Example (Hugging Face repo id):
+
+```json
+{
+  "CODE_MEMORY_SUMMARY_MODEL": "Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF"
 }
 ```
 
@@ -299,6 +325,10 @@ The remaining summary-related variables tune llama.cpp runtime and generation:
 - `CODE_MEMORY_SUMMARY_MAX_CHARS`
 - `CODE_MEMORY_SUMMARY_PROMPT`
 - `CODE_MEMORY_AUTO_INSTALL` and `CODE_MEMORY_PIP_ARGS`
+
+Auto-download controls:
+
+- `CODE_MEMORY_SUMMARY_AUTO_DOWNLOAD` (default `1`)
 
 ## Session id fallback
 

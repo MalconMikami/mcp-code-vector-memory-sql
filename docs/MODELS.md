@@ -97,6 +97,13 @@ Note: the Granite option can exceed a 500MB budget quickly depending on
 `CODE_MEMORY_SUMMARY_CTX`, thread count, and what else is running in the same
 process/machine.
 
+### Auto-download
+
+If `CODE_MEMORY_SUMMARY_MODEL` is set to a Hugging Face repo id (for example
+`Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF`), the server will download a suitable
+`.gguf` from that repo (prefers `Q4_K_M` when available) unless you disable it
+with `CODE_MEMORY_SUMMARY_AUTO_DOWNLOAD=0`.
+
 ### Nano vs small models
 
 `mcp-code-vector-memory-sql` supports both **nano** and **small** GGUF models for

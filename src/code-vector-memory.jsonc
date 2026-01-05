@@ -1,0 +1,83 @@
+{
+  // mcp-code-vector-memory-sql configuration (JSONC)
+  // Precedence: environment variables > this file > code defaults
+  //
+  // Tip: set a value to null to behave as "not set" (use code defaults).
+  //
+  // This file is read from: src/code-vector-memory.jsonc
+
+  // -----------------------------
+  // Storage / workspace
+  // -----------------------------
+
+  "CODE_MEMORY_DB_PATH": null, // Full path to the SQLite DB file. Overrides CODE_MEMORY_DB_DIR when set.
+  "CODE_MEMORY_DB_DIR": ".", // Directory where code_memory.db will be created (default: current working dir).
+  "CODE_MEMORY_WORKSPACE": ".", // Root for MCP resources (default: current working dir).
+
+  // -----------------------------
+  // Embeddings
+  // -----------------------------
+
+  "CODE_MEMORY_EMBED_MODEL": "BAAI/bge-small-en-v1.5", // fastembed model name.
+  "CODE_MEMORY_EMBED_DIM": 384, // Required when using a non-default model (must match the model's embedding dimension).
+  "CODE_MEMORY_MODEL_DIR": "~/.cache/code-memory", // Cache directory for embedding models and downloaded GGUF.
+
+  // -----------------------------
+  // Logging
+  // -----------------------------
+
+  "CODE_MEMORY_LOG_LEVEL": "INFO", // One of: DEBUG, INFO, WARNING, ERROR.
+  "CODE_MEMORY_LOG_DIR": null, // Directory for timestamped log files (preferred over LOG_FILE if both set).
+  "CODE_MEMORY_LOG_FILE": null, // If set, its parent directory is used for a timestamped log file.
+
+  // -----------------------------
+  // Feature flags
+  // -----------------------------
+
+  "CODE_MEMORY_ENABLE_VEC": true, // Enable vector search (sqlite-vec).
+  "CODE_MEMORY_ENABLE_FTS": true, // Enable FTS5 merge/re-rank.
+  "CODE_MEMORY_ENABLE_GRAPH": false, // Enable knowledge graph tables/tools.
+
+  // -----------------------------
+  // Retrieval / ranking
+  // -----------------------------
+
+  "CODE_MEMORY_TOP_K": 12, // Default limit returned by search_memory (when client doesn't pass limit).
+  "CODE_MEMORY_TOP_P": 0.6, // Recency filter after re-ranking (0..1], 1.0 keeps all candidates.
+  "CODE_MEMORY_OVERSAMPLE_K": 4, // Candidates fetched before re-ranking = limit * oversample_k.
+  "CODE_MEMORY_PRIORITY_WEIGHT": 0.15, // Penalty weight for lower priority (priority is 1..5, 1 is most important).
+  "CODE_MEMORY_RECENCY_WEIGHT": 0.2, // Recency penalty weight (older items get worse score).
+  "CODE_MEMORY_FTS_BONUS": 0.1, // Score bonus (subtracted) for items matched by FTS.
+
+  // -----------------------------
+  // Session fallback
+  // -----------------------------
+
+  "CODE_MEMORY_SESSION_ID": null, // Fallback session id if the client doesn't send one (most clients should send it).
+
+  // -----------------------------
+  // Local summaries (GGUF / llama.cpp)
+  // -----------------------------
+
+  // `CODE_MEMORY_SUMMARY_MODEL` can be either:
+  // - a local .gguf file path (example: "C:/models/qwen.gguf")
+  // - a Hugging Face repo id (example: "Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF")
+  //
+  // Recommended: set to a Hugging Face repo id so the server can auto-download a GGUF when needed.
+  // Example URL: https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF
+  "CODE_MEMORY_SUMMARY_MODEL": "Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF",
+  "CODE_MEMORY_SUMMARY_AUTO_DOWNLOAD": true, // Set false to disable any Hugging Face downloads.
+
+  "CODE_MEMORY_SUMMARY_CTX": 2048, // Llama context size.
+  "CODE_MEMORY_SUMMARY_THREADS": 4, // CPU threads for llama.cpp.
+  "CODE_MEMORY_SUMMARY_MAX_TOKENS": 200, // Max tokens to generate per summary.
+  "CODE_MEMORY_SUMMARY_TEMPERATURE": 0.2, // Lower = more deterministic.
+  "CODE_MEMORY_SUMMARY_TOP_P": 0.9, // Nucleus sampling.
+  "CODE_MEMORY_SUMMARY_REPEAT_PENALTY": 1.05, // Penalize repetition.
+  "CODE_MEMORY_SUMMARY_GPU_LAYERS": 0, // GPU offload layers (0 = CPU).
+  "CODE_MEMORY_SUMMARY_MAX_CHARS": 300, // Hard cap on returned summary length.
+  "CODE_MEMORY_SUMMARY_PROMPT": "", // Optional custom prompt for summarization.
+
+  "CODE_MEMORY_AUTO_INSTALL": true, // Auto-install llama-cpp-python if missing.
+  "CODE_MEMORY_PIP_ARGS": "" // Extra pip args for llama-cpp-python install (advanced).
+}

@@ -7,6 +7,7 @@ Quick index:
 - `docs/ARCHITECTURE.md`: components, flows and schema
 - `docs/OPERATIONS.md`: maintenance, logs, diagnostics and troubleshooting
 - `docs/API.md`: MCP tools reference
+- `docs/BENCHMARKS.md`: performance benchmark methodology + latest results
 
 Deep dives:
 

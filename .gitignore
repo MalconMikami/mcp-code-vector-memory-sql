@@ -9,6 +9,9 @@ env/
 build/
 dist/
 *.egg-info/
+.benchmarks/
+.coverage
+.hypothesis/
 code_memory.db
 *.log
 .cache/

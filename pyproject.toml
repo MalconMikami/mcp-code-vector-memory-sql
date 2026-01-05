@@ -17,7 +17,7 @@ dependencies = [
 [project.optional-dependencies]
 graph = ["tree-sitter", "tree-sitter-languages"]
 summary = ["llama-cpp-python"]
-dev = ["pytest"]
+dev = ["pytest", "pytest-benchmark"]
 
 [project.scripts]
 code-memory = "code_memory.server:main"
