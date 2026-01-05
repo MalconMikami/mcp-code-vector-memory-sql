@@ -292,7 +292,7 @@ Full reference (inputs/outputs/examples): [docs/API.md](docs/API.md).
 | Vector search | Yes (sqlite-vec) | Yes (libSQL vector) | No |
 | FTS re-rank | Yes (FTS5) | Not documented | Not documented |
 | Session scoping | Yes (`session_id`) | Not documented | Not documented |
-| Knowledge graph | Optional | Yes | Yes |
+| Knowledge graph | Yes | Yes | Yes |
 | Local summaries | Optional (GGUF) | Not documented | Not documented |
 
 Note: comparison is based on the published READMEs of those projects.
