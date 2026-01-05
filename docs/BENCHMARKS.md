@@ -10,12 +10,22 @@ PowerShell:
 
 ```powershell
 $env:RUN_BENCHMARKS=1
-python -m pytest -q tests/benchmarks --benchmark-only --benchmark-json=docs/benchmarks/latest.json
+$ts = Get-Date -Format "yyyy-MM-dd-HH-mm"
+python -m pytest -q tests/benchmarks --benchmark-only --benchmark-json=("docs/benchmarks/$ts.json")
 ```
 
 Notes:
 - Benchmarks are skipped by default. You must set `RUN_BENCHMARKS=1`.
-- The JSON output is written to `docs/benchmarks/latest.json`.
+- We store benchmark artifacts under `docs/benchmarks/` using timestamped filenames.
+
+If you want to run without summary model auto-download:
+
+```powershell
+$env:RUN_BENCHMARKS=1
+$env:CODE_MEMORY_SUMMARY_AUTO_DOWNLOAD=0
+$ts = Get-Date -Format "yyyy-MM-dd-HH-mm"
+python -m pytest -q tests/benchmarks --benchmark-only --benchmark-json=("docs/benchmarks/$ts.json")
+```
 
 ## Configuration used
 
@@ -44,7 +54,8 @@ Command:
 
 ```powershell
 $env:RUN_BENCHMARKS=1
-python -m pytest -q tests/benchmarks --benchmark-only --benchmark-json=docs/benchmarks/latest.json
+$ts = Get-Date -Format "yyyy-MM-dd-HH-mm"
+python -m pytest -q tests/benchmarks --benchmark-only --benchmark-json=("docs/benchmarks/$ts.json")
 ```
 
 Summary (mean time and derived ops/sec):
@@ -59,7 +70,7 @@ Summary (mean time and derived ops/sec):
 | `test_benchmark_tag_search_like_ops` | 0.019 | 52355.1 |
 
 Raw benchmark artifact:
-- `docs/benchmarks/latest.json`
+- `docs/benchmarks/2026-01-04-22-03.json`
 
 ## Summary (GGUF) benchmarks
 
@@ -78,7 +89,8 @@ CPU-only:
 
 ```powershell
 $env:RUN_BENCHMARKS=1
-python -m pytest -q tests/benchmarks -k "summary_gguf_cpu" -vv --benchmark-only --benchmark-json=docs/benchmarks/summary_cpu.json
+$ts = Get-Date -Format "yyyy-MM-dd-HH-mm"
+python -m pytest -q tests/benchmarks -k "summary_gguf_cpu" -vv --benchmark-only --benchmark-json=("docs/benchmarks/$ts.json")
 ```
 
 GPU (optional):
@@ -88,5 +100,8 @@ GPU (optional):
 ```powershell
 $env:RUN_BENCHMARKS=1
 $env:CODE_MEMORY_BENCH_SUMMARY_GPU_LAYERS=999
-python -m pytest -q tests/benchmarks -k "summary_gguf_gpu" -vv --benchmark-only --benchmark-json=docs/benchmarks/summary_gpu.json
+$ts = Get-Date -Format "yyyy-MM-dd-HH-mm"
+python -m pytest -q tests/benchmarks -k "summary_gguf_gpu" -vv --benchmark-only --benchmark-json=("docs/benchmarks/$ts.json")
 ```
+
+Tip: to run only non-summary store benchmarks, use `-k "not summary_gguf"`.

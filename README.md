@@ -309,6 +309,20 @@ Note: comparison is based on the published READMEs of those projects.
 - [Tuning guide](docs/TUNING_GUIDE.md)
 - [Operations](docs/OPERATIONS.md)
 
+## Performance snapshot
+
+Latest local benchmark artifact: `docs/benchmarks/2026-01-04-22-03.json`.
+
+| Benchmark | Mean | Ops/sec |
+|---|---:|---:|
+| `insert` | 0.972 ms | 1029 |
+| `embed` | 5.363 ms | 186 |
+| `vector_search` | 7.763 ms | 129 |
+| `hybrid_search` | 10.840 ms | 92 |
+| `tags_fts` | 0.131 ms | 7605 |
+| `tags_like` | 0.017 ms | 57367 |
+| `summary_gguf_cpu` (small/med/large) | 1.41s / 1.46s / 1.92s | 0.71 / 0.69 / 0.52 |
+
 ## Development
 
 ```bash
