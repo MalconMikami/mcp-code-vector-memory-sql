@@ -39,6 +39,32 @@ from . import summary as _summary
 from .config import EMBED_DIM, get_setting
 
 
+# Tool I/O logging (for tracing client requests/responses)
+def _tool_io_logging_enabled() -> bool:
+    # Requested behavior: when log level is INFO, log every tool call input/output.
+    return str(LOG_LEVEL).upper() == "INFO"
+
+
+def _truncate_for_log(value: object, max_chars: int) -> str:
+    try:
+        s = json.dumps(value, ensure_ascii=True, sort_keys=True, default=str)
+    except Exception:
+        s = str(value)
+    if max_chars > 0 and len(s) > max_chars:
+        return s[:max_chars] + "...(truncated)"
+    return s
+
+
+def _log_tool_io(tool_name: str, direction: str, payload: object) -> None:
+    if not _tool_io_logging_enabled():
+        return
+    try:
+        max_chars = int(os.getenv("CODE_MEMORY_LOG_TOOL_MAX_CHARS", "20000"))
+    except Exception:
+        max_chars = 20000
+    logger.info("[tool:%s] %s %s", tool_name, direction, _truncate_for_log(payload, max_chars=max_chars))
+
+
 # ---------------------------------------------------------------------------
 # Backwards-compatible re-exports (tests + external integrations may import these)
 # ---------------------------------------------------------------------------
@@ -254,9 +280,25 @@ def remember(
     ctx: Context | None = None,
 ) -> dict:
     try:
+        _log_tool_io(
+            "remember",
+            "in",
+            {
+                "content": content,
+                "session_id": session_id,
+                "kind": kind,
+                "summary": summary,
+                "tags": tags,
+                "priority": priority,
+                "metadata_json": metadata_json,
+                "ctx_session_id": getattr(ctx, "session_id", None) if ctx else None,
+            },
+        )
         resolved_session_id = _resolve_session_id(session_id, ctx)
         if not resolved_session_id:
-            return {"status": "error", "error": "session_id is required", "tool": "remember"}
+            out = {"status": "error", "error": "session_id is required", "tool": "remember"}
+            _log_tool_io("remember", "out", out)
+            return out
         metadata = json.loads(metadata_json) if metadata_json else None
         mem_id = store.add(
             content=content,
@@ -269,12 +311,14 @@ def remember(
             ctx=ctx,
         )
         if mem_id == -1:
-            return {"status": "skipped"}
+            out = {"status": "skipped"}
+            _log_tool_io("remember", "out", out)
+            return out
         if ctx:
             ctx.info(f"Stored memory {mem_id}")
         logger.info("remember ok id=%s session_id=%s priority=%s", mem_id, resolved_session_id, priority)
         logger.debug("remember payload summary=%s tags=%s kind=%s metadata=%s", summary, tags, kind, metadata)
-        return {
+        out = {
             "id": mem_id,
             "summary": summary,
             "session_id": resolved_session_id,
@@ -282,9 +326,13 @@ def remember(
             "tags": tags,
             "priority": priority,
         }
+        _log_tool_io("remember", "out", out)
+        return out
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool remember failed")
-        return {"status": "error", "error": str(exc), "tool": "remember"}
+        out = {"status": "error", "error": str(exc), "tool": "remember"}
+        _log_tool_io("remember", "out", out)
+        return out
 
 
 @server.tool(
@@ -346,15 +394,32 @@ def search_memory(
     ctx: Context | None = None,
 ) -> List[dict]:
     try:
+        _log_tool_io(
+            "search_memory",
+            "in",
+            {
+                "query": query,
+                "session_id": session_id,
+                "limit": limit,
+                "top_p": top_p,
+                "ctx_session_id": getattr(ctx, "session_id", None) if ctx else None,
+            },
+        )
         resolved_session_id = _resolve_session_id(session_id, ctx)
         if not resolved_session_id:
-            return {"status": "error", "error": "session_id is required", "tool": "search_memory"}
+            out = {"status": "error", "error": "session_id is required", "tool": "search_memory"}
+            _log_tool_io("search_memory", "out", out)
+            return out
         limit = clamp_top_k(limit)
         top_p = clamp_top_p(top_p)
-        return store.search(query=query, session_id=resolved_session_id, limit=limit, top_p=top_p)
+        out = store.search(query=query, session_id=resolved_session_id, limit=limit, top_p=top_p)
+        _log_tool_io("search_memory", "out", out)
+        return out
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool search_memory failed")
-        return {"status": "error", "error": str(exc), "tool": "search_memory"}
+        out = {"status": "error", "error": str(exc), "tool": "search_memory"}
+        _log_tool_io("search_memory", "out", out)
+        return out
 
 
 @server.tool(
@@ -377,10 +442,15 @@ def search_memory(
 )
 def list_recent(limit: int = 20) -> List[dict]:
     try:
-        return store.recent(limit=limit)
+        _log_tool_io("list_recent", "in", {"limit": limit})
+        out = store.recent(limit=limit)
+        _log_tool_io("list_recent", "out", out)
+        return out
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool list_recent failed")
-        return {"status": "error", "error": str(exc), "tool": "list_recent"}
+        out = {"status": "error", "error": str(exc), "tool": "list_recent"}
+        _log_tool_io("list_recent", "out", out)
+        return out
 
 
 @server.tool(
@@ -401,10 +471,15 @@ def list_recent(limit: int = 20) -> List[dict]:
 )
 def list_entities(memory_id: int) -> List[dict]:
     try:
-        return store.list_entities(memory_id)
+        _log_tool_io("list_entities", "in", {"memory_id": memory_id})
+        out = store.list_entities(memory_id)
+        _log_tool_io("list_entities", "out", out)
+        return out
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool list_entities failed")
-        return {"status": "error", "error": str(exc), "tool": "list_entities"}
+        out = {"status": "error", "error": str(exc), "tool": "list_entities"}
+        _log_tool_io("list_entities", "out", out)
+        return out
 
 
 @server.tool(
@@ -434,16 +509,32 @@ def upsert_entity(
     memory_id: Optional[int] = None,
 ) -> dict:
     try:
+        _log_tool_io(
+            "upsert_entity",
+            "in",
+            {
+                "name": name,
+                "entity_type": entity_type,
+                "observations_json": observations_json,
+                "memory_id": memory_id,
+            },
+        )
         if not ENABLE_GRAPH:
-            return {"status": "disabled"}
+            out = {"status": "disabled"}
+            _log_tool_io("upsert_entity", "out", out)
+            return out
         observations = json.loads(observations_json) if observations_json else []
         if not isinstance(observations, list):
             observations = [str(observations)]
         entity_id = store.upsert_graph_entity(name, entity_type, observations, memory_id)
-        return {"status": "ok", "entity_id": entity_id}
+        out = {"status": "ok", "entity_id": entity_id}
+        _log_tool_io("upsert_entity", "out", out)
+        return out
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool upsert_entity failed")
-        return {"status": "error", "error": str(exc), "tool": "upsert_entity"}
+        out = {"status": "error", "error": str(exc), "tool": "upsert_entity"}
+        _log_tool_io("upsert_entity", "out", out)
+        return out
 
 
 @server.tool(
@@ -472,13 +563,29 @@ def add_relation(
     memory_id: Optional[int] = None,
 ) -> dict:
     try:
+        _log_tool_io(
+            "add_relation",
+            "in",
+            {
+                "source": source,
+                "target": target,
+                "relation_type": relation_type,
+                "memory_id": memory_id,
+            },
+        )
         if not ENABLE_GRAPH:
-            return {"status": "disabled"}
+            out = {"status": "disabled"}
+            _log_tool_io("add_relation", "out", out)
+            return out
         rel_id = store.add_graph_relation(source, target, relation_type, memory_id)
-        return {"status": "ok", "relation_id": rel_id}
+        out = {"status": "ok", "relation_id": rel_id}
+        _log_tool_io("add_relation", "out", out)
+        return out
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool add_relation failed")
-        return {"status": "error", "error": str(exc), "tool": "add_relation"}
+        out = {"status": "error", "error": str(exc), "tool": "add_relation"}
+        _log_tool_io("add_relation", "out", out)
+        return out
 
 
 @server.tool(
@@ -508,10 +615,15 @@ def add_relation(
 )
 def get_entity(name: str) -> dict:
     try:
-        return store.get_graph_entity(name)
+        _log_tool_io("get_entity", "in", {"name": name})
+        out = store.get_graph_entity(name)
+        _log_tool_io("get_entity", "out", out)
+        return out
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool get_entity failed")
-        return {"status": "error", "error": str(exc), "tool": "get_entity"}
+        out = {"status": "error", "error": str(exc), "tool": "get_entity"}
+        _log_tool_io("get_entity", "out", out)
+        return out
 
 
 @server.tool(
@@ -538,12 +650,18 @@ def get_entity(name: str) -> dict:
 )
 def get_context_graph(query: Optional[str] = None, limit: int = 10) -> dict:
     try:
+        _log_tool_io("get_context_graph", "in", {"query": query, "limit": limit})
         if query:
-            return store.search_graph(query, limit=limit)
-        return store.read_graph(limit=limit)
+            out = store.search_graph(query, limit=limit)
+        else:
+            out = store.read_graph(limit=limit)
+        _log_tool_io("get_context_graph", "out", out)
+        return out
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool get_context_graph failed")
-        return {"status": "error", "error": str(exc), "tool": "get_context_graph"}
+        out = {"status": "error", "error": str(exc), "tool": "get_context_graph"}
+        _log_tool_io("get_context_graph", "out", out)
+        return out
 
 
 @server.tool(
@@ -577,14 +695,28 @@ def maintenance(
     older_than_days: Optional[int] = None,
 ) -> dict:
     try:
+        _log_tool_io(
+            "maintenance",
+            "in",
+            {
+                "action": action,
+                "confirm": confirm,
+                "session_id": session_id,
+                "older_than_days": older_than_days,
+            },
+        )
         if action != "vacuum" and not confirm:
-            return {"status": "error", "error": "confirm=true required for destructive actions"}
+            out = {"status": "error", "error": "confirm=true required for destructive actions"}
+            _log_tool_io("maintenance", "out", out)
+            return out
 
         conn = connect_db(db_path=DB_PATH, enable_vec=ENABLE_VEC or (ENABLE_GRAPH and ENABLE_VEC), load_vec=ENABLE_VEC)
         try:
             if action == "vacuum":
                 conn.execute("VACUUM")
-                return {"status": "ok", "action": "vacuum"}
+                out = {"status": "ok", "action": "vacuum"}
+                _log_tool_io("maintenance", "out", out)
+                return out
 
             ids = []
             if action == "purge_all":
@@ -602,7 +734,9 @@ def maintenance(
                 return {"status": "error", "error": "invalid action or missing parameter"}
 
             if not ids:
-                return {"status": "ok", "deleted": 0}
+                out = {"status": "ok", "deleted": 0}
+                _log_tool_io("maintenance", "out", out)
+                return out
 
             placeholders = ",".join("?" for _ in ids)
             conn.execute(f"DELETE FROM entities WHERE memory_id IN ({placeholders})", ids)
@@ -613,12 +747,16 @@ def maintenance(
                 conn.execute(f"DELETE FROM graph_relations WHERE memory_id IN ({placeholders})", ids)
             conn.execute(f"DELETE FROM memories WHERE id IN ({placeholders})", ids)
             conn.commit()
-            return {"status": "ok", "deleted": len(ids)}
+            out = {"status": "ok", "deleted": len(ids)}
+            _log_tool_io("maintenance", "out", out)
+            return out
         finally:
             conn.close()
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool maintenance failed")
-        return {"status": "error", "error": str(exc), "tool": "maintenance"}
+        out = {"status": "error", "error": str(exc), "tool": "maintenance"}
+        _log_tool_io("maintenance", "out", out)
+        return out
 
 
 @server.tool(
@@ -635,6 +773,7 @@ def maintenance(
 )
 def diagnostics() -> dict:
     try:
+        _log_tool_io("diagnostics", "in", {})
         conn = connect_db(db_path=DB_PATH, enable_vec=ENABLE_VEC or (ENABLE_GRAPH and ENABLE_VEC), load_vec=ENABLE_VEC)
         try:
             tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
@@ -644,7 +783,7 @@ def diagnostics() -> dict:
                     counts[t] = conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
         finally:
             conn.close()
-        return {
+        out = {
             "cwd": str(Path.cwd()),
             "db_path": str(DB_PATH),
             "model": EMBED_MODEL_NAME,
@@ -670,9 +809,13 @@ def diagnostics() -> dict:
             "tables": tables,
             "counts": counts,
         }
+        _log_tool_io("diagnostics", "out", out)
+        return out
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool diagnostics failed")
-        return {"status": "error", "error": str(exc), "tool": "diagnostics"}
+        out = {"status": "error", "error": str(exc), "tool": "diagnostics"}
+        _log_tool_io("diagnostics", "out", out)
+        return out
 
 
 @server.tool(
@@ -685,6 +828,7 @@ def diagnostics() -> dict:
 )
 def health() -> dict:
     try:
+        _log_tool_io("health", "in", {})
         info = {
             "status": "ok",
             "db_path": str(DB_PATH),
@@ -713,10 +857,13 @@ def health() -> dict:
             "workspace": str(ROOT),
         }
         logger.info("health check: %s", info)
+        _log_tool_io("health", "out", info)
         return info
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool health failed")
-        return {"status": "error", "error": str(exc), "tool": "health"}
+        out = {"status": "error", "error": str(exc), "tool": "health"}
+        _log_tool_io("health", "out", out)
+        return out
 
 
 def main() -> None:

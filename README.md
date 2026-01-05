@@ -298,11 +298,12 @@ Full reference (inputs/outputs/examples): [docs/API.md](docs/API.md).
 Note: comparison is based on the published READMEs of those projects.
 
 ## Docs
-
+ 
 - [Docs index](docs/README.md)
 - [MCP tools API](docs/API.md)
 - [Configuration](docs/CONFIGURATION.md)
 - [Models](docs/MODELS.md)
+- [Benchmarks](docs/BENCHMARKS.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Hybrid search](docs/HYBRID_SEARCH.md)
 - [Tuning guide](docs/TUNING_GUIDE.md)

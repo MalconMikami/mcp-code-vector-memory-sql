@@ -65,6 +65,15 @@ Raw benchmark artifact:
 
 These benchmarks measure `llama-cpp-python` summary generation speed with the configured GGUF model.
 
+We run three input sizes:
+- small: short notes (a few lines)
+- medium: several paragraphs
+- large: many paragraphs (simulates long logs/docs)
+
+To reduce variance, the benchmarks set:
+- `CODE_MEMORY_SUMMARY_MAX_TOKENS=128`
+- `CODE_MEMORY_SUMMARY_TEMPERATURE=0.0`
+
 CPU-only:
 
 ```powershell

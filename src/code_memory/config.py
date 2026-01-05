@@ -108,10 +108,22 @@ def get_float(name: str, default: float) -> float:
         return float(default)
 
 
-ROOT = Path(get_setting("CODE_MEMORY_WORKSPACE", Path.cwd())).resolve()
-DB_DIR = Path(get_setting("CODE_MEMORY_DB_DIR", Path.cwd()))
+def _norm_path(value, *, default: Path) -> Path:
+    raw = get_setting(value, None) if isinstance(value, str) else value
+    if raw is None:
+        path = default
+    else:
+        path = Path(raw)
+    try:
+        return path.expanduser().resolve()
+    except Exception:
+        return path
+
+
+ROOT = _norm_path("CODE_MEMORY_WORKSPACE", default=Path.cwd())
+DB_DIR = _norm_path("CODE_MEMORY_DB_DIR", default=Path.cwd())
 _db_path_override = get_setting("CODE_MEMORY_DB_PATH", None)
-DB_PATH = Path(_db_path_override if _db_path_override is not None else (DB_DIR / "code_memory.db")).resolve()
+DB_PATH = _norm_path(_db_path_override, default=(DB_DIR / "code_memory.db"))
 
 DEFAULT_EMBED_MODEL = "BAAI/bge-small-en-v1.5"
 EMBED_MODEL_NAME = str(get_setting("CODE_MEMORY_EMBED_MODEL", DEFAULT_EMBED_MODEL))
@@ -122,7 +134,7 @@ try:
 except Exception:
     EMBED_DIM = 384
     EMBED_DIM_CONFIGURED = False
-MODEL_CACHE_DIR = Path(get_setting("CODE_MEMORY_MODEL_DIR", Path.home() / ".cache" / "code-memory"))
+MODEL_CACHE_DIR = _norm_path("CODE_MEMORY_MODEL_DIR", default=(Path.home() / ".cache" / "code-memory"))
 
 DEFAULT_TOP_K = get_int("CODE_MEMORY_TOP_K", 12)
 DEFAULT_TOP_P = get_float("CODE_MEMORY_TOP_P", 0.6)
@@ -154,14 +166,18 @@ LOG_BASE = get_setting("CODE_MEMORY_LOG_DIR") or get_setting("CODE_MEMORY_LOG_FI
 def _resolve_logfile(base: Optional[str]) -> Optional[Path]:
     if not base:
         return None
-    base_path = Path(base)
+    base_path = Path(base).expanduser()
     if base_path.suffix:
         log_dir = base_path.parent if base_path.parent != Path() else Path.cwd()
     else:
         log_dir = base_path
-    log_dir.mkdir(parents=True, exist_ok=True)
+    log_dir = log_dir.expanduser()
+    try:
+        log_dir.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
     stamp = time.strftime("%Y%m%d-%H%M%S")
-    return log_dir / f"code-memory-{stamp}.log"
+    return (log_dir / f"code-memory-{stamp}.log").expanduser()
 
 
 LOG_FILE = _resolve_logfile(LOG_BASE)

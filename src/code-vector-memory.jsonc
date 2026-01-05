@@ -26,7 +26,7 @@
   // Logging
   // -----------------------------
 
-  "CODE_MEMORY_LOG_LEVEL": "INFO", // One of: DEBUG, INFO, WARNING, ERROR.
+  "CODE_MEMORY_LOG_LEVEL": "ERROR", // One of: DEBUG, INFO, WARNING, ERROR.
   "CODE_MEMORY_LOG_DIR": null, // Directory for timestamped log files (preferred over LOG_FILE if both set).
   "CODE_MEMORY_LOG_FILE": null, // If set, its parent directory is used for a timestamped log file.
 
@@ -34,7 +34,7 @@
   // Feature flags
   // -----------------------------
 
-  "CODE_MEMORY_ENABLE_VEC": true, // Enable vector search (sqlite-vec).
+  "CODE_MEMORY_ENABLE_VEC": false, // Enable vector search (sqlite-vec).
   "CODE_MEMORY_ENABLE_FTS": true, // Enable FTS5 merge/re-rank.
   "CODE_MEMORY_ENABLE_GRAPH": false, // Enable knowledge graph tables/tools.
 
