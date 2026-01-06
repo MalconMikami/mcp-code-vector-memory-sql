@@ -1,11 +1,11 @@
-# Hybrid search (vectors + FTS + optional graph)
+# Hybrid search (vectors + FTS + graph)
 
 `mcp-code-vector-memory-sql` combines multiple retrieval signals to get better "developer
 memory" results:
 
-- **Vector search**: semantic similarity (sqlite-vec)
-- **FTS5** (optional): exact/fuzzy term matches, merged into results
-- **Graph** (optional): entity-centric lookup via `get_context_graph`
+- **Vector search**: semantic similarity (libSQL vector backend)
+- **FTS5**: exact/fuzzy term matches, merged into results
+- **Graph**: entity-centric lookup via `get_context_graph`
 
 This document explains the retrieval pipeline. For tuning, see
 `docs/TUNING_GUIDE.md`.
@@ -21,7 +21,7 @@ At a high level, `search_memory(query, session_id, limit, top_p)` does:
    - Runs an FTS5 lookup for the query
    - Marks vector hits that also match FTS, and adds extra FTS-only hits
 3. **Fallback**
-   - If nothing matched, return the most recent memories for the session
+   - If nothing matched, return the most recent observations (as a last resort)
 4. **Re-ranking**
    - Computes a score that blends:
      - vector distance (lower is better)
@@ -50,26 +50,7 @@ See `docs/TUNING_GUIDE.md`.
 
 ## Feature flags and behavior changes
 
-### Vectors disabled (`CODE_MEMORY_ENABLE_VEC=0`)
-
-`search_memory` becomes:
-
-- FTS lookup (if enabled), otherwise
-- "most recent memories" fallback
-
-This is useful if you want a lightweight setup and mostly rely on exact terms.
-
-### FTS disabled (`CODE_MEMORY_ENABLE_FTS=0`)
-
-`search_memory` becomes vector-only with priority/recency ranking.
-
-This is useful if you want purely semantic retrieval and the simplest setup.
-
-### Graph enabled (`CODE_MEMORY_ENABLE_GRAPH=1`)
-
-The graph is updated during `remember` and can be queried via `get_context_graph`.
-It is complementary to `search_memory` (entity-centric instead of memory-row
-centric).
+This project does not expose feature flags for vector/FTS/graph; they are always enabled.
 
 ## Suggested defaults
 

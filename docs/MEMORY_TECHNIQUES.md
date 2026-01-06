@@ -29,14 +29,6 @@ Examples of low-signal memories:
 
 ## Use the fields intentionally
 
-### `summary`
-
-If you can provide a good one-liner summary, do it. Search and re-ranking often
-benefit from concise descriptions.
-
-If you do not provide a summary, `mcp-code-vector-memory-sql` may generate one locally (if
-GGUF summarization is enabled).
-
 ### `tags`
 
 Use tags to create lightweight facets you can search for later.
@@ -80,7 +72,7 @@ Instead of storing one huge memory, store a few smaller ones:
 - one for the implementation notes
 - one for the validation steps
 
-This improves retrieval precision and makes summaries more stable.
+This improves retrieval precision and makes search results more stable.
 
 ## Retrieval strategies
 
@@ -94,16 +86,16 @@ This improves retrieval precision and makes summaries more stable.
 If you want a "what did we just do" experience, keep `CODE_MEMORY_TOP_P` lower.
 If you want stronger recall across the session history, increase it toward `1.0`.
 
-## Local summaries: when to enable
+## Local NER: when to enable
 
-Enable local summaries when:
+Enable local NER when:
 
-- you want more compact memories without sending data to a cloud API
-- you store longer notes and want an automatic one-liner summary
+- you want better structured recall (entities/relations) without sending data to a cloud API
+- you store messy logs/notes and want automatic extraction of technologies, errors, commands, paths, etc.
 
 Keep it disabled when:
 
-- you prefer to write summaries explicitly
 - you want a lighter install and fewer dependencies
+- regex-only extraction is good enough for your workflow
 
 See `docs/MODELS.md` and `docs/CONFIGURATION.md` for GGUF setup.

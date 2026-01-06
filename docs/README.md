@@ -3,7 +3,7 @@
 Quick index:
 
 - `docs/CONFIGURATION.md`: full configuration reference (env vars + examples)
-- `docs/MODELS.md`: choosing embedding and summary models
+- `docs/MODELS.md`: choosing embedding and NER models
 - `docs/ARCHITECTURE.md`: components, flows and schema
 - `docs/OPERATIONS.md`: maintenance, logs, diagnostics and troubleshooting
 - `docs/API.md`: MCP tools reference

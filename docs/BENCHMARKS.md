@@ -18,11 +18,11 @@ Notes:
 - Benchmarks are skipped by default. You must set `RUN_BENCHMARKS=1`.
 - We store benchmark artifacts under `docs/benchmarks/` using timestamped filenames.
 
-If you want to run without summary model auto-download:
+If you want to run without NER model auto-download:
 
 ```powershell
 $env:RUN_BENCHMARKS=1
-$env:CODE_MEMORY_SUMMARY_AUTO_DOWNLOAD=0
+$env:CODE_MEMORY_NER_AUTO_DOWNLOAD=0
 $ts = Get-Date -Format "yyyy-MM-dd-HH-mm"
 python -m pytest -q tests/benchmarks --benchmark-only --benchmark-json=("docs/benchmarks/$ts.json")
 ```
@@ -32,14 +32,12 @@ python -m pytest -q tests/benchmarks --benchmark-only --benchmark-json=("docs/be
 Benchmarks use the same environment-based configuration as the MCP server. The benchmark suite configures a temporary DB and sets common flags.
 
 Typical benchmark env (see `tests/benchmarks/test_store_benchmark.py`):
-- `CODE_MEMORY_ENABLE_VEC=1` for vector benchmarks
-- `CODE_MEMORY_ENABLE_FTS=1` for hybrid/FTS benchmarks
-- `CODE_MEMORY_ENABLE_GRAPH=0` (graph is not benchmarked yet)
+- Vector/FTS/graph are always enabled in this project.
 - `CODE_MEMORY_TOP_K`, `CODE_MEMORY_TOP_P`, `CODE_MEMORY_OVERSAMPLE_K` as needed
 
-Embedding / summary:
+Embedding / NER:
 - Embeddings: controlled by `CODE_MEMORY_EMBED_MODEL` and `CODE_MEMORY_EMBED_DIM`
-- Summaries (GGUF): controlled by `CODE_MEMORY_SUMMARY_MODEL` and `CODE_MEMORY_SUMMARY_AUTO_DOWNLOAD`
+- NER (GGUF): controlled by `CODE_MEMORY_NER_MODEL` and `CODE_MEMORY_NER_AUTO_DOWNLOAD`
 
 ## Machine (latest run)
 
@@ -71,37 +69,3 @@ Summary (mean time and derived ops/sec):
 
 Raw benchmark artifact:
 - `docs/benchmarks/2026-01-04-22-03.json`
-
-## Summary (GGUF) benchmarks
-
-These benchmarks measure `llama-cpp-python` summary generation speed with the configured GGUF model.
-
-We run three input sizes:
-- small: short notes (a few lines)
-- medium: several paragraphs
-- large: many paragraphs (simulates long logs/docs)
-
-To reduce variance, the benchmarks set:
-- `CODE_MEMORY_SUMMARY_MAX_TOKENS=128`
-- `CODE_MEMORY_SUMMARY_TEMPERATURE=0.0`
-
-CPU-only:
-
-```powershell
-$env:RUN_BENCHMARKS=1
-$ts = Get-Date -Format "yyyy-MM-dd-HH-mm"
-python -m pytest -q tests/benchmarks -k "summary_gguf_cpu" -vv --benchmark-only --benchmark-json=("docs/benchmarks/$ts.json")
-```
-
-GPU (optional):
-- Requires a `llama-cpp-python` build with GPU support working on your machine.
-- Enable by setting `CODE_MEMORY_BENCH_SUMMARY_GPU_LAYERS>0`.
-
-```powershell
-$env:RUN_BENCHMARKS=1
-$env:CODE_MEMORY_BENCH_SUMMARY_GPU_LAYERS=999
-$ts = Get-Date -Format "yyyy-MM-dd-HH-mm"
-python -m pytest -q tests/benchmarks -k "summary_gguf_gpu" -vv --benchmark-only --benchmark-json=("docs/benchmarks/$ts.json")
-```
-
-Tip: to run only non-summary store benchmarks, use `-k "not summary_gguf"`.

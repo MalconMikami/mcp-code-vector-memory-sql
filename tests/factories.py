@@ -8,7 +8,6 @@ class MemoryInput:
     content: str
     session_id: str
     kind: str
-    summary: str
     tags: str
     priority: int
     metadata: Dict = field(default_factory=dict)
@@ -22,13 +21,11 @@ def make_memory(
 ) -> MemoryInput:
     token = keyword or f"token_{index}"
     content = f"Memory {index} about {token} in module_{index}.py"
-    summary = f"Summary {index} about {token}"
     tags = "test"
     return MemoryInput(
         content=content,
         session_id=session_id,
         kind="note",
-        summary=summary,
         tags=tags,
         priority=priority,
         metadata={"index": index},

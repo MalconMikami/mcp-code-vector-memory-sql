@@ -17,38 +17,6 @@ If a key exists in the JSON config file with value `null`, it is treated as "not
 
 ## Storage and workspace
 
-### `CODE_MEMORY_DB_PATH`
-
-Full path to the SQLite database file (for example `C:/repo/code_memory.db`).
-
-- If set, it overrides `CODE_MEMORY_DB_DIR`.
-- If the parent directory does not exist, SQLite will fail to open the DB.
-- Relative paths are resolved from the current working directory.
-
-Example:
-
-```json
-{
-  "CODE_MEMORY_DB_PATH": "C:/repo/.cache/code_memory.db"
-}
-```
-
-### `CODE_MEMORY_DB_DIR`
-
-Directory where the DB file will be created. The DB filename is always
-`code_memory.db`.
-
-- Default: current working directory (cwd)
-- Ignored when `CODE_MEMORY_DB_PATH` is set
-
-Example:
-
-```json
-{
-  "CODE_MEMORY_DB_DIR": "C:/repo"
-}
-```
-
 ### `CODE_MEMORY_WORKSPACE`
 
 Root folder used by MCP resources:
@@ -63,13 +31,14 @@ Example (point resources at your repo, while keeping the DB elsewhere):
 ```json
 {
   "CODE_MEMORY_WORKSPACE": "C:/repo",
-  "CODE_MEMORY_DB_PATH": "C:/Users/you/.cache/code-memory/code_memory.db"
+  "CODE_MEMORY_DB_URL": "libsql://127.0.0.1:8080"
 }
 ```
 
 ## Embeddings (vector search)
 
-Embeddings are produced by `fastembed` (CPU) and stored via `sqlite-vec`.
+Embeddings are produced by `fastembed` (CPU) and stored via libSQL vector functions
+(`vector32`, `vector_distance_cos`, `libsql_vector_idx`) when using `CODE_MEMORY_DB_URL`.
 
 ### `CODE_MEMORY_EMBED_MODEL`
 
@@ -88,7 +57,7 @@ Example:
 
 ### `CODE_MEMORY_EMBED_DIM`
 
-The embedding vector dimension. This is critical because the sqlite-vec table is
+The embedding vector dimension. This is critical because the embedding column is
 created with a fixed size (for example `float[384]` or `float[768]`).
 
 - Default: `384` (matches `BAAI/bge-small-en-v1.5`)
@@ -100,7 +69,7 @@ Safe switch example (new DB file + explicit dim):
 
 ```json
 {
-  "CODE_MEMORY_DB_PATH": "C:/repo/.cache/code_memory_nomic.db",
+  "CODE_MEMORY_DB_URL": "libsql://127.0.0.1:8080",
   "CODE_MEMORY_EMBED_MODEL": "nomic-ai/nomic-embed-text-v1.5",
   "CODE_MEMORY_EMBED_DIM": "768"
 }
@@ -122,45 +91,13 @@ Example:
 }
 ```
 
-## Feature flags
+## Features
 
-### `CODE_MEMORY_ENABLE_VEC`
+This project always enables:
 
-Enable/disable vector search (sqlite-vec).
-
-- Default: `1`
-- When disabled, `search_memory` falls back to FTS (if enabled) and then to
-  "recent memories" as a last resort.
-- Any value other than `0`, `false`, or `no` (case-insensitive) is treated as
-  enabled.
-
-### `CODE_MEMORY_ENABLE_FTS`
-
-Enable/disable FTS5.
-
-- Default: `1`
-- When enabled, FTS matches are merged into the candidate set and get a bonus
-  during re-ranking (`CODE_MEMORY_FTS_BONUS`).
-- Any value other than `0`, `false`, or `no` (case-insensitive) is treated as
-  enabled.
-
-### `CODE_MEMORY_ENABLE_GRAPH`
-
-Enable/disable the knowledge graph tables and updates.
-
-- Default: `0`
-- When enabled, entity extraction runs on `remember` and the graph tables
-  (`graph_entities`, `graph_observations`, `graph_relations`) are maintained.
-- Any value other than `0`, `false`, or `no` (case-insensitive) is treated as
-  enabled.
-
-Example:
-
-```json
-{
-  "CODE_MEMORY_ENABLE_GRAPH": "1"
-}
-```
+- Vector search
+- FTS5
+- Entity/relation extraction (graph)
 
 ## Search parameters (ranking)
 
@@ -281,19 +218,19 @@ Example (file path - directory is used):
 }
 ```
 
-## Local summarization (GGUF)
+## Local NER (GGUF)
 
-Local summaries are optional and require a GGUF file on disk.
+Local entity/relation extraction is optional and requires a GGUF file on disk.
 
-### `CODE_MEMORY_SUMMARY_MODEL`
+### `CODE_MEMORY_NER_MODEL`
 
-Full path to a GGUF model file. If unset, local summaries are disabled.
+Full path to a GGUF model file (or a Hugging Face repo id). If unset, local NER is disabled.
 
 Behavior:
 
-- If `CODE_MEMORY_SUMMARY_MODEL` is not set, local summaries are disabled.
-- If `CODE_MEMORY_SUMMARY_MODEL` is set to a local `.gguf` path, that file is used.
-- If `CODE_MEMORY_SUMMARY_MODEL` is set to a Hugging Face repo id (for example
+- If `CODE_MEMORY_NER_MODEL` is not set, local NER is disabled (regex fallback still runs).
+- If `CODE_MEMORY_NER_MODEL` is set to a local `.gguf` path, that file is used.
+- If `CODE_MEMORY_NER_MODEL` is set to a Hugging Face repo id (for example
   `Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF`), the server will download a suitable
   `.gguf` from that repo into `CODE_MEMORY_MODEL_DIR/gguf` (prefers `Q4_K_M` when available).
 
@@ -301,7 +238,7 @@ Example:
 
 ```json
 {
-  "CODE_MEMORY_SUMMARY_MODEL": "C:/models/qwen2.5-coder-0.5b-instruct.gguf"
+  "CODE_MEMORY_NER_MODEL": "C:/models/qwen2.5-coder-0.5b-instruct.gguf"
 }
 ```
 
@@ -309,26 +246,26 @@ Example (Hugging Face repo id):
 
 ```json
 {
-  "CODE_MEMORY_SUMMARY_MODEL": "Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF"
+  "CODE_MEMORY_NER_MODEL": "Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF"
 }
 ```
 
-The remaining summary-related variables tune llama.cpp runtime and generation:
+Tuning variables (optional):
 
-- `CODE_MEMORY_SUMMARY_CTX`
-- `CODE_MEMORY_SUMMARY_THREADS`
-- `CODE_MEMORY_SUMMARY_MAX_TOKENS`
-- `CODE_MEMORY_SUMMARY_TEMPERATURE`
-- `CODE_MEMORY_SUMMARY_TOP_P`
-- `CODE_MEMORY_SUMMARY_REPEAT_PENALTY`
-- `CODE_MEMORY_SUMMARY_GPU_LAYERS`
-- `CODE_MEMORY_SUMMARY_MAX_CHARS`
-- `CODE_MEMORY_SUMMARY_PROMPT`
+- `CODE_MEMORY_NER_CTX`
+- `CODE_MEMORY_NER_THREADS`
+- `CODE_MEMORY_NER_MAX_TOKENS`
+- `CODE_MEMORY_NER_TEMPERATURE`
+- `CODE_MEMORY_NER_TOP_P`
+- `CODE_MEMORY_NER_REPEAT_PENALTY`
+- `CODE_MEMORY_NER_GPU_LAYERS`
+- `CODE_MEMORY_NER_MAX_INPUT_CHARS`
+- `CODE_MEMORY_NER_PROMPT`
 - `CODE_MEMORY_AUTO_INSTALL` and `CODE_MEMORY_PIP_ARGS`
 
 Auto-download controls:
 
-- `CODE_MEMORY_SUMMARY_AUTO_DOWNLOAD` (default `1`)
+- `CODE_MEMORY_NER_AUTO_DOWNLOAD` (default `1`)
 
 ## Session id fallback
 
@@ -358,8 +295,32 @@ explicitly.
 ### FTS-only mode (no vectors)
 
 ```json
+{}
+```
+### `CODE_MEMORY_DB_URL` (required)
+
+Connect to a libSQL server using the Python `libsql-client`.
+
+- This project always uses a libSQL backend; this setting is required.
+- Can point to a local `sqld` on localhost (recommended for “local server” mode) or a remote Turso database.
+
+Examples:
+
+```json
+{ "CODE_MEMORY_DB_URL": "libsql://127.0.0.1:8080" }
+```
+
+```json
+{ "CODE_MEMORY_DB_URL": "libsql://your-db.turso.io" }
+```
+
+### `CODE_MEMORY_DB_AUTH_TOKEN`
+
+Auth token used with `CODE_MEMORY_DB_URL` (same idea as `LIBSQL_AUTH_TOKEN`).
+
+```json
 {
-  "CODE_MEMORY_ENABLE_VEC": "0",
-  "CODE_MEMORY_ENABLE_FTS": "1"
+  "CODE_MEMORY_DB_URL": "libsql://your-db.turso.io",
+  "CODE_MEMORY_DB_AUTH_TOKEN": "..."
 }
 ```

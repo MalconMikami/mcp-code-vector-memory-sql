@@ -58,19 +58,13 @@ FTS hits get a score bonus (lower is better).
 ### FTS-only mode (no vectors)
 
 ```json
-{
-  "CODE_MEMORY_ENABLE_VEC": "0",
-  "CODE_MEMORY_ENABLE_FTS": "1"
-}
+{}
 ```
 
 ### Vector-only mode (no FTS)
 
 ```json
-{
-  "CODE_MEMORY_ENABLE_VEC": "1",
-  "CODE_MEMORY_ENABLE_FTS": "0"
-}
+{}
 ```
 
 ## Suggested defaults

@@ -9,7 +9,6 @@ def test_remember_and_search_tools(server_module):
         content="Store this note about search keyword zebra",
         session_id="S1",
         kind="note",
-        summary="note about zebra",
         tags="test",
         priority=2,
         metadata_json=None,

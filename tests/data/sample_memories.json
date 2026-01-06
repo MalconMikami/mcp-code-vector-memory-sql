@@ -1,9 +1,8 @@
-[
+﻿[
   {
     "content": "Remember: API client uses timeout 15s in module_api.py",
     "session_id": "S1",
     "kind": "note",
-    "summary": "API client timeout is 15s",
     "tags": "api,timeout",
     "priority": 2,
     "metadata": {
@@ -21,7 +20,6 @@
     "content": "Bug fix: handled null user in auth flow; error code AUTH_004",
     "session_id": "S1",
     "kind": "bugfix",
-    "summary": "Auth flow handles null user",
     "tags": "bug,auth",
     "priority": 1,
     "metadata": {
@@ -38,7 +36,6 @@
     "content": "Refactor: extracted helper parse_config and added unit tests",
     "session_id": "S1",
     "kind": "refactor",
-    "summary": "parse_config helper extracted",
     "tags": "refactor,config",
     "priority": 3,
     "metadata": {
@@ -55,7 +52,6 @@
     "content": "Feature: added dashboard route /dashboard and sidebar link",
     "session_id": "S2",
     "kind": "feature",
-    "summary": "Dashboard route added",
     "tags": "feature,ui",
     "priority": 2,
     "metadata": {
@@ -71,7 +67,6 @@
     "content": "Decision: keep sqlite as local store; avoid remote sync for now",
     "session_id": "S2",
     "kind": "decision",
-    "summary": "SQLite stays as local store",
     "tags": "decision,data",
     "priority": 2,
     "metadata": {
@@ -84,7 +79,6 @@
     "content": "Config: set max_connections=20 in server.toml",
     "session_id": "S1",
     "kind": "config",
-    "summary": "max_connections set to 20",
     "tags": "config,server",
     "priority": 3,
     "metadata": {
@@ -99,7 +93,6 @@
     "content": "Error: connection refused on 127.0.0.1:5432 while running tests",
     "session_id": "S1",
     "kind": "incident",
-    "summary": "DB connection refused on local port",
     "tags": "error,db",
     "priority": 2,
     "metadata": {
@@ -113,7 +106,6 @@
     "content": "Test plan: add unit tests for cache invalidation and retry logic",
     "session_id": "S1",
     "kind": "test",
-    "summary": "Plan for cache invalidation tests",
     "tags": "test,cache",
     "priority": 4,
     "metadata": {
@@ -125,7 +117,6 @@
     "content": "Short note: OK",
     "session_id": "S1",
     "kind": "note",
-    "summary": "OK",
     "tags": "note",
     "priority": 5,
     "metadata": {
@@ -136,7 +127,6 @@
     "content": "Long note: During refactor of memory search, we switched FTS to triggers and removed external content tables. This avoids stale rows after delete and keeps the index consistent. We also increased cache_size and set mmap_size for faster reads on SSD.",
     "session_id": "S1",
     "kind": "note",
-    "summary": "FTS triggers + cache tuning",
     "tags": "fts,sqlite,performance",
     "priority": 2,
     "metadata": {
@@ -152,7 +142,6 @@
     "content": "Performance: query time 120ms -> 35ms after index on session_id",
     "session_id": "S2",
     "kind": "perf",
-    "summary": "Index improved query time",
     "tags": "perf,index",
     "priority": 2,
     "metadata": {
@@ -170,7 +159,6 @@
     "content": "Incident: build failed due to missing dotenv module",
     "session_id": "S2",
     "kind": "incident",
-    "summary": "Build failed: dotenv missing",
     "tags": "incident,build",
     "priority": 1,
     "metadata": {
@@ -179,10 +167,9 @@
     }
   },
   {
-    "content": "Migration: added column session_id to memories table",
+    "content": "Migration: added column session_id to observations table",
     "session_id": "S1",
     "kind": "migration",
-    "summary": "memories.session_id added",
     "tags": "migration,db",
     "priority": 2,
     "metadata": {
@@ -196,7 +183,6 @@
     "content": "Decision: keep priority scale 1-5 where 1 is highest",
     "session_id": "S1",
     "kind": "decision",
-    "summary": "Priority scale fixed to 1-5",
     "tags": "decision,priority",
     "priority": 2,
     "metadata": {
@@ -207,7 +193,6 @@
     "content": "Tooling: update opencode.json to use python -m code_memory",
     "session_id": "S3",
     "kind": "tooling",
-    "summary": "OpenCode config uses module entrypoint",
     "tags": "tooling,config",
     "priority": 3,
     "metadata": {
@@ -221,7 +206,6 @@
     "content": "Security: redacted token pattern from logs, avoid api_key values",
     "session_id": "S1",
     "kind": "security",
-    "summary": "Token patterns redacted",
     "tags": "security,logs",
     "priority": 1,
     "metadata": {
@@ -233,7 +217,6 @@
     "content": "Doc: updated README with env vars and mcp config",
     "session_id": "S2",
     "kind": "doc",
-    "summary": "README updated",
     "tags": "doc,readme",
     "priority": 4,
     "metadata": {
@@ -247,7 +230,6 @@
     "content": "UI: align primary button and add tooltip for Save",
     "session_id": "S2",
     "kind": "ui",
-    "summary": "Primary button aligned",
     "tags": "ui,ux",
     "priority": 3,
     "metadata": {
@@ -262,7 +244,6 @@
     "content": "Edge case: Windows path with backslashes in config: C:\\repo\\app",
     "session_id": "S3",
     "kind": "note",
-    "summary": "Windows path stored as raw string",
     "tags": "windows,path",
     "priority": 4,
     "metadata": {
@@ -274,7 +255,6 @@
     "content": "Feature: added rerank bonus for FTS hits in hybrid search",
     "session_id": "S1",
     "kind": "feature",
-    "summary": "FTS bonus in rerank",
     "tags": "search,fts",
     "priority": 2,
     "metadata": {
@@ -288,7 +268,6 @@
     "content": "Perf test: inserted 500 memories in 4.2s on SSD",
     "session_id": "S1",
     "kind": "perf",
-    "summary": "500 inserts in 4.2s",
     "tags": "perf,load",
     "priority": 3,
     "metadata": {
@@ -303,7 +282,6 @@
     "content": "Debug: stderr shows Connection closed after greeting input",
     "session_id": "S3",
     "kind": "debug",
-    "summary": "Connection closed after greeting",
     "tags": "debug,mcp",
     "priority": 2,
     "metadata": {
@@ -314,7 +292,6 @@
     "content": "Config: set CODE_MEMORY_TOP_K=12 and TOP_P=0.6",
     "session_id": "S3",
     "kind": "config",
-    "summary": "Top K and Top P configured",
     "tags": "config,search",
     "priority": 3,
     "metadata": {
@@ -329,7 +306,6 @@
     "content": "Note: create new log file per session using timestamp",
     "session_id": "S2",
     "kind": "note",
-    "summary": "Log file per session",
     "tags": "logs,session",
     "priority": 3,
     "metadata": {
@@ -340,7 +316,6 @@
     "content": "Cleanup: added maintenance tool to purge or vacuum DB",
     "session_id": "S1",
     "kind": "maintenance",
-    "summary": "Maintenance tool added",
     "tags": "maintenance,db",
     "priority": 2,
     "metadata": {
@@ -353,10 +328,9 @@
     }
   },
   {
-    "content": "Test: validate FTS trigger delete removes row from memories_fts",
+    "content": "Test: validate FTS trigger delete removes row from observations_fts",
     "session_id": "S1",
     "kind": "test",
-    "summary": "FTS delete trigger validated",
     "tags": "test,fts",
     "priority": 4,
     "metadata": {
@@ -367,7 +341,6 @@
     "content": "Decision: graph features off by default to reduce noise",
     "session_id": "S2",
     "kind": "decision",
-    "summary": "Graph off by default",
     "tags": "decision,graph",
     "priority": 3,
     "metadata": {
@@ -375,10 +348,9 @@
     }
   },
   {
-    "content": "Note: switched db path to workspace root unless CODE_MEMORY_DB_PATH is set",
+    "content": "Note: configured libSQL URL via CODE_MEMORY_DB_URL",
     "session_id": "S3",
     "kind": "note",
-    "summary": "DB path defaults to workspace",
     "tags": "db,config",
     "priority": 3,
     "metadata": {

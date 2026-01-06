@@ -9,6 +9,7 @@ Uso:
 from pathlib import Path
 import json
 import sys
+import os
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
@@ -23,24 +24,30 @@ def _load_main():
 
 
 def reset_db(main):
-    if main.DB_PATH.exists():
-        main.DB_PATH.unlink()
+    # libsql "file:" points at a local sqlite-compatible file managed by libsql-client.
+    # For this smoke test, just use a unique file in the repo and delete it if it exists.
+    url = os.getenv("CODE_MEMORY_DB_URL", "")
+    if url.startswith("file:"):
+        p = Path(url[len("file:") :])
+        if p.exists():
+            p.unlink()
 
 
 def run():
     print(":: Resetando banco...")
+    os.environ.setdefault("CODE_MEMORY_DB_URL", f"file:{(ROOT / 'tests' / '.tmp-smoke.db')}")
+    os.environ.setdefault("CODE_MEMORY_DB_AUTH_TOKEN", "")
     main = _load_main()
     reset_db(main)
 
     # Recarrega o store para recriar schema
-    main.store = main.MemoryStore(main.DB_PATH)
+    main.store = main.MemoryStore()
 
     print(":: Chamando add direto (espera sucesso)...")
     r1_id = main.store.add(
         content="Primeiro teste de memoria",
         session_id="S1",
         kind="test",
-        summary="Teste inicial",
         tags="test",
         priority=2,
         metadata={"origin": "test_script"},
@@ -54,7 +61,6 @@ def run():
         content="Primeiro teste de memoria",
         session_id="S1",
         kind="test",
-        summary="Teste inicial duplicado",
         tags="test",
         priority=2,
         metadata={"origin": "test_script"},
@@ -74,34 +80,33 @@ def run():
     assert len(lr) >= 1, "list_recent deveria retornar ao menos 1"
 
     print(":: list_entities do primeiro id (pode ser vazio)...")
-    entities = main.store.list_entities(memory_id=r1_id)
+    entities = main.store.list_entities(observation_id=r1_id)
     print("list_entities ->", entities)
 
-    if main.ENABLE_GRAPH:
-        print(":: upsert_graph_entity + add_graph_relation...")
-        e1 = main.store.upsert_graph_entity(
-            name="UserService",
-            entity_type="class",
-            observations=["UserService handles auth logic"],
-            memory_id=r1_id,
-        )
-        e2 = main.store.upsert_graph_entity(
-            name="AuthController",
-            entity_type="class",
-            observations=["AuthController calls UserService"],
-            memory_id=r1_id,
-        )
-        rel_id = main.store.add_graph_relation("AuthController", "UserService", "calls", memory_id=r1_id)
-        print("graph entity ids ->", e1, e2, "relation ->", rel_id)
+    print(":: upsert_graph_entity + add_graph_relation...")
+    e1 = main.store.upsert_graph_entity(
+        name="UserService",
+        entity_type="class",
+        observations=["UserService handles auth logic"],
+        memory_id=r1_id,
+    )
+    e2 = main.store.upsert_graph_entity(
+        name="AuthController",
+        entity_type="class",
+        observations=["AuthController calls UserService"],
+        memory_id=r1_id,
+    )
+    rel_id = main.store.add_graph_relation("AuthController", "UserService", "calls", memory_id=r1_id)
+    print("graph entity ids ->", e1, e2, "relation ->", rel_id)
 
-        print(":: get_context_graph (semantic)...")
-        graph = main.store.search_graph(query="auth", limit=5)
-        print("graph ->", graph)
+    print(":: get_context_graph (semantic)...")
+    graph = main.store.search_graph(query="auth", limit=5)
+    print("graph ->", graph)
 
     print(":: health (dados diretos)...")
     h = {
         "status": "ok",
-        "db_path": str(main.DB_PATH),
+        "db_url": os.getenv("CODE_MEMORY_DB_URL"),
         "embedding_dim": main.store.embedder.dim,
         "model": main.EMBED_MODEL_NAME,
         "model_cache_dir": str(main.MODEL_CACHE_DIR),

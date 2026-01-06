@@ -4,31 +4,28 @@ This page documents the MCP tools exposed by `mcp-code-vector-memory-sql`.
 
 Notes:
 
-- `session_id` is required for memory operations and scopes storage/retrieval.
+- `session_id` is required for `remember`. For `search_memory`, providing `session_id` enables session-aware ranking
+  (same-session results get a boost), but search still considers all sessions.
 - Most tools return JSON objects (or arrays of objects).
-- Some features depend on flags:
-  - `CODE_MEMORY_ENABLE_VEC` (vector search)
-  - `CODE_MEMORY_ENABLE_FTS` (FTS merge/re-rank)
-  - `CODE_MEMORY_ENABLE_GRAPH` (graph tables and graph tools)
+- Vector / FTS / graph are always enabled.
 
 ## `remember`
 
-Store a memory row (and optionally index it for vectors/FTS, extract entities, and update the graph).
+Store a memory observation (and optionally index it for vectors/FTS, extract entities, and update relations).
 
 Inputs:
 
 - `content` (string, required): the raw text to store
 - `session_id` (string, required): session scope key
 - `kind` (string, optional): category (example: `decision`, `bugfix`, `note`)
-- `summary` (string, optional): short summary (if omitted, server may generate one if GGUF summaries are enabled)
 - `tags` (string, optional): comma-separated tags (example: `auth,jwt,bugfix`)
 - `priority` (int, optional): 1..5 (1 is most important, 5 is least important)
 - `metadata_json` (string, optional): JSON object encoded as a string
 
 Returns (on success):
 
-- `id` (int): memory id
-- echoes `summary`, `session_id`, `kind`, `tags`, `priority`
+- `id` (int): observation id
+- echoes `session_id`, `kind`, `tags`, `priority`, `content_hash`
 
 Returns (on skip):
 
@@ -38,10 +35,9 @@ Example:
 
 ```json
 {
-  "content": "Decision: keep embeddings CPU-only. Use sqlite-vec for local semantic search.",
+  "content": "Decision: keep embeddings CPU-only. Use vector search for local semantic recall.",
   "session_id": "opencode:2026-01-04",
   "kind": "decision",
-  "summary": "Chose CPU-only embeddings + sqlite-vec for local semantic memory.",
   "tags": "architecture,sqlite,embeddings",
   "priority": 1,
   "metadata_json": "{\"repo\":\"mcp-code-vector-memory-sql\",\"ticket\":\"MEM-12\"}"
@@ -50,19 +46,19 @@ Example:
 
 ## `search_memory`
 
-Search memories for a `session_id` using vector similarity (if enabled) plus optional FTS merge and re-ranking.
+Search memories using vector similarity plus FTS merge and re-ranking.
 
 Inputs:
 
 - `query` (string, required)
-- `session_id` (string, required)
+- `session_id` (string, optional): used for session-aware ranking
 - `limit` (int, optional): max results to return (default: `CODE_MEMORY_TOP_K`)
 - `top_p` (float, optional): recency filter (0..1], default: `CODE_MEMORY_TOP_P`
 
 Returns:
 
 - array of memory objects; each item typically contains:
-  - `id`, `session_id`, `kind`, `content`, `summary`, `tags`, `priority`, `metadata`, `created_at`
+  - `id`, `session_id`, `kind`, `content`, `content_hash`, `tags`, `priority`, `metadata`, `created_at`
   - `score` (float): lower is better (ranking score)
   - `fts_hit` (bool): whether the item was also matched by FTS
 
@@ -70,7 +66,7 @@ Example:
 
 ```json
 {
-  "query": "sqlite-vec embedding dimension mismatch",
+  "query": "vector embedding dimension mismatch",
   "session_id": "opencode:2026-01-04",
   "limit": 8,
   "top_p": 0.7
@@ -99,15 +95,15 @@ Inputs:
 
 Returns:
 
-- array of `{ "entity_type": string, "name": string, "source": string, "path": string|null }`
+- array of `{ "name": string, "entity_type": string, "relation_type": string }`
 
 Notes:
 
-- Entity extraction may be minimal when `tree-sitter` is not installed; regex extraction still runs.
+- Entities are derived from the graph observations linked to the memory id (focus: "world facts" like technologies, services, errors, commands, paths).
 
-## Graph tools (require `CODE_MEMORY_ENABLE_GRAPH=1`)
+## Graph tools
 
-When graph mode is enabled, `remember` updates graph tables and the following tools can be used.
+`remember` updates graph tables and the following tools can be used.
 
 ### `upsert_entity`
 
@@ -162,7 +158,7 @@ Inputs:
 
 Returns:
 
-- object containing entities and relations (shape depends on implementation and flags)
+- object containing entities and relations (shape depends on stored data)
 
 ## `maintenance`
 
@@ -172,6 +168,7 @@ Inputs:
 
 - `action` (string, required): one of
   - `vacuum`
+  - `rebuild_graph` (destructive): rebuild `entities` + `relations` from stored observations
   - `purge_all` (destructive)
   - `purge_session` (destructive, requires `session_id`)
   - `prune_older_than` (destructive, requires `older_than_days`)
@@ -185,16 +182,16 @@ Returns:
 
 ## `diagnostics`
 
-Return environment and DB diagnostics (flags, defaults, table list, counts).
+Return environment and DB diagnostics (defaults, table list, counts).
 
 Inputs: none
 
 Returns:
 
 - object with:
-  - `db_path`, embedding model info, feature flags
+  - `db_url`, embedding model info
   - defaults (top_k/top_p/weights)
-  - summary config (enabled/model/ctx/threads/etc)
+  - NER config (enabled/model/ctx/threads/etc)
   - tables and row counts
 
 ## `health`
@@ -206,7 +203,6 @@ Inputs: none
 Returns:
 
 - `{ "status": "ok", ... }` including:
-  - `db_path`, embedding dimension/model
-  - feature flags
-  - summary enablement
+  - `db_url`, embedding dimension/model
+  - NER enablement
   - log file path (if configured)

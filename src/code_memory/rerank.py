@@ -2,9 +2,18 @@ from __future__ import annotations
 
 import math
 import time
-from typing import List
+from typing import List, Optional
 
-from .config import DEFAULT_TOP_K, DEFAULT_TOP_P, FTS_BONUS, OVERSAMPLE_K, PRIORITY_WEIGHT, RECENCY_WEIGHT
+from .config import (
+    CROSS_SESSION_PENALTY,
+    DEFAULT_TOP_K,
+    DEFAULT_TOP_P,
+    FTS_BONUS,
+    OVERSAMPLE_K,
+    PRIORITY_WEIGHT,
+    RECENCY_WEIGHT,
+    SESSION_BONUS,
+)
 
 
 def clamp_top_k(value: int) -> int:
@@ -51,7 +60,7 @@ def apply_recency_filter(results: List[dict], top_p: float) -> List[dict]:
     return [r for r in results if r["id"] in keep_ids]
 
 
-def rerank_results(results: List[dict], top_p: float) -> List[dict]:
+def rerank_results(results: List[dict], top_p: float, *, session_id: Optional[str] = None) -> List[dict]:
     if not results:
         return results
     times = [parse_timestamp(r.get("created_at", "")) for r in results]
@@ -62,6 +71,12 @@ def rerank_results(results: List[dict], top_p: float) -> List[dict]:
         base = r.get("score", 1.0) or 1.0
         if r.get("fts_hit"):
             base -= FTS_BONUS
+        if session_id:
+            row_session = r.get("session_id")
+            if row_session == session_id:
+                base -= SESSION_BONUS
+            elif row_session:
+                base += CROSS_SESSION_PENALTY
         priority = r.get("priority") or 3
         base += PRIORITY_WEIGHT * (priority - 1)
         age = now - parse_timestamp(r.get("created_at", ""))
@@ -72,4 +87,3 @@ def rerank_results(results: List[dict], top_p: float) -> List[dict]:
     results = apply_recency_filter(results, top_p)
     results.sort(key=lambda x: x["score"])
     return results
-

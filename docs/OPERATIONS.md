@@ -12,9 +12,9 @@
 Tool: `maintenance(action, confirm, session_id, older_than_days)`
 
 - `vacuum`: run `VACUUM` (no confirm required)
-- `purge_all`: delete all memories (requires `confirm=true`)
-- `purge_session`: delete all memories for a `session_id` (requires `confirm=true`)
-- `prune_older_than`: delete memories older than N days (requires `confirm=true`)
+- `purge_all`: delete all observations (requires `confirm=true`)
+- `purge_session`: delete all observations for a `session_id` (requires `confirm=true`)
+- `prune_older_than`: delete observations older than N days (requires `confirm=true`)
 
 ## Privacy and dedupe
 
@@ -24,5 +24,5 @@ Tool: `maintenance(action, confirm, session_id, older_than_days)`
 ## Troubleshooting
 
 - Embedding dimension mismatch: set `CODE_MEMORY_EMBED_DIM` correctly and use a new DB file
-- Summaries not enabled: verify `CODE_MEMORY_SUMMARY_MODEL` path and llama-cpp-python install
-- sqlite-vec load errors: ensure `sqlite-vec` is installed and compatible with your Python build
+- NER not enabled: verify `CODE_MEMORY_NER_MODEL` path and llama-cpp-python install
+- libSQL backend: ensure `CODE_MEMORY_DB_URL` points to a running `sqld` (or Turso) with vector enabled

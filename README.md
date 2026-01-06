@@ -4,8 +4,8 @@
 
 # mcp-code-vector-memory-sql
 
-Local MCP memory server for OpenCode/VS Code, Cline, Roo Code, Claude Desktop, OpenHands, Aider, Cursor, Gider, Windsurf, PydanticAI, LangGraph, CrewA powered by SQLite + sqlite-vec.
-It provides session-scoped memory with semantic search, optional FTS5 re-ranking,
+Local MCP memory server for OpenCode/VS Code, Cline, Roo Code, Claude Desktop, OpenHands, Aider, Cursor, Gider, Windsurf, PydanticAI, LangGraph, CrewA powered by SQLite + FTS5 + libSQL vector (optional).
+It provides session-aware memory with semantic search, optional FTS5 re-ranking,
 and optional local summaries (GGUF).
 
 
@@ -17,7 +17,7 @@ Inspired by:
 
 - [Why](#why)
 - [How it works](#how-it-works)
-- [Hybrid search (vectors + FTS + optional graph)](#hybrid-search-vectors--fts--optional-graph)
+- [Hybrid search (vectors + FTS + graph)](#hybrid-search-vectors--fts--graph)
 - [Key features](#key-features)
 - [Install](#install)
 - [MCP setup](#mcp-setup)
@@ -43,14 +43,14 @@ When you use an MCP client while coding, you often need memory that is:
 
 ## How it works
 
-## Hybrid search (vectors + FTS + optional graph)
+## Hybrid search (vectors + FTS + graph)
 
 `mcp-code-vector-memory-sql` combines multiple retrieval signals to get better "developer
 memory" results:
 
-- **Vector search**: semantic similarity (sqlite-vec)
-- **FTS5** (optional): exact/fuzzy term matches, merged into results
-- **Graph** (optional): entity-centric lookup via `get_context_graph`
+- **Vector search**: semantic similarity (libSQL vector backend)
+- **FTS5**: exact/fuzzy term matches, merged into results
+- **Graph**: entity-centric lookup via `get_context_graph`
 
 If you want to understand the full retrieval pipeline and ranking details, see
 [docs/HYBRID_SEARCH.md](docs/HYBRID_SEARCH.md) and [docs/TUNING_GUIDE.md](docs/TUNING_GUIDE.md).
@@ -59,9 +59,9 @@ If you want to understand the full retrieval pipeline and ranking details, see
 
 1. Resolve `session_id` (input, MCP context, or `CODE_MEMORY_SESSION_ID`)
 2. Filter sensitive content + skip recent duplicates
-3. Generate optional local summary and basic tags
-4. Store in SQLite (+ vector index and FTS index if enabled)
-5. Optionally extract entities and update the knowledge graph
+3. Generate basic tags
+4. Store in libSQL (vectors + FTS5)
+5. Extract entities/relations and update the knowledge graph
 
 ### `search_memory`
 
@@ -72,11 +72,11 @@ If you want to understand the full retrieval pipeline and ranking details, see
 
 ## Key features
 
-- Session-scoped storage (`session_id` is required)
-- Vector search with `sqlite-vec` + `fastembed` (CPU)
-- Optional FTS5 for exact/fuzzy matching and re-ranking
-- Optional entity extraction (regex + tree-sitter) and knowledge graph
-- Optional local summarization via GGUF (`llama-cpp-python`)
+- Session-aware storage (`session_id` is required for remember; boosts same-session search results)
+- Vector search with `fastembed` (CPU) + libSQL vector (optional, when using `CODE_MEMORY_DB_URL`)
+- FTS5 for exact/fuzzy matching and re-ranking
+- Entity extraction (LLM + regex fallback) and knowledge graph
+- Optional local NER via GGUF (`llama-cpp-python`)
 - Sensitive-content filter + recent dedupe (hash window)
 
 ## Install
@@ -97,7 +97,7 @@ pip install -e .
 Optional extras:
 
 ```bash
-pip install -e ".[graph,summary]"
+pip install -e ".[ner]"
 ```
 
 Run manually (useful for debugging):
@@ -127,7 +127,7 @@ Example `opencode.json`:
       "command": "python",
       "args": ["-m", "code_memory"],
       "env": {
-        "CODE_MEMORY_DB_DIR": "C:/path/to/your/workspace",
+        "CODE_MEMORY_DB_URL": "libsql://127.0.0.1:8080",
         "CODE_MEMORY_LOG_DIR": "C:/Users/you/.cache/code-memory/logs"
       }
     }
@@ -160,7 +160,7 @@ Add this to your Cline MCP settings:
       "command": "python",
       "args": ["-m", "code_memory"],
       "env": {
-        "CODE_MEMORY_DB_DIR": "/path/to/your/workspace",
+        "CODE_MEMORY_DB_URL": "libsql://127.0.0.1:8080",
         "CODE_MEMORY_LOG_DIR": "/path/to/logs"
       }
     }
@@ -186,7 +186,7 @@ Example:
         "cd /path/to/your/repo && source .venv/bin/activate && python -m code_memory"
       ],
       "env": {
-        "CODE_MEMORY_DB_DIR": "/path/to/your/workspace",
+        "CODE_MEMORY_DB_URL": "libsql://127.0.0.1:8080",
         "CODE_MEMORY_LOG_DIR": "/path/to/logs"
       }
     }
@@ -208,12 +208,12 @@ Full reference (detailed explanations + more examples): [docs/CONFIGURATION.md](
 
 | Variable | What it controls |
 | --- | --- |
-| `CODE_MEMORY_DB_PATH` | Full path to the SQLite DB file (overrides `CODE_MEMORY_DB_DIR`) |
 | `CODE_MEMORY_WORKSPACE` | Root folder for MCP `resource://workspace` and `resource://readme` |
+| `CODE_MEMORY_DB_URL` | Required libSQL URL (`libsql://...`) |
 | `CODE_MEMORY_EMBED_MODEL` | Embedding model name (fastembed) |
 | `CODE_MEMORY_EMBED_DIM` | Embedding dimension (required for non-default models) |
-| `CODE_MEMORY_ENABLE_VEC` | Enable/disable vector search |
-| `CODE_MEMORY_ENABLE_FTS` | Enable/disable FTS5 search and re-ranking |
+| Vector search | Always enabled |
+| FTS5 | Always enabled |
 | `CODE_MEMORY_TOP_K` | Default max results returned by `search_memory` |
 | `CODE_MEMORY_TOP_P` | Recency filter applied during re-ranking (0..1) |
 
@@ -223,23 +223,14 @@ Project-local DB + logs:
 
 ```json
 {
-  "CODE_MEMORY_DB_DIR": "C:/repo",
+  "CODE_MEMORY_DB_URL": "libsql://127.0.0.1:8080",
   "CODE_MEMORY_LOG_DIR": "C:/repo/.logs"
 }
 ```
 
-Disable the graph (default) and tune search a bit:
+Tune search a bit:
 
-```json
-{
-  "CODE_MEMORY_ENABLE_GRAPH": "0",
-  "CODE_MEMORY_TOP_K": "12",
-  "CODE_MEMORY_TOP_P": "0.7",
-  "CODE_MEMORY_OVERSAMPLE_K": "4"
-}
-```
-
-## Models (embeddings + local summaries)
+## Models (embeddings + local NER)
 
 Detailed guide: [docs/MODELS.md](docs/MODELS.md).
 
@@ -254,16 +245,16 @@ Other popular options you can use with this server:
 Note: some models (e.g. `Qwen2.5-Embedding-0.6B`) are not supported by
 `fastembed` in this repo today. They require a different embedding backend.
 
-### Local summary models (GGUF)
+### Local NER models (GGUF)
 
-Any GGUF model supported by `llama-cpp-python` can be used for local summaries,
+Any GGUF model supported by `llama-cpp-python` can be used for local NER/entity extraction,
 including small code-focused models like `Qwen2.5-Coder-0.5B` (very fast).
 
 ## MCP tools
 
 Full reference (inputs/outputs/examples): [docs/API.md](docs/API.md).
 
-- `remember(content, session_id, kind, summary, tags, priority, metadata_json)`
+- `remember(content, session_id, kind, tags, priority, metadata_json)`
 - `search_memory(query, session_id, limit, top_p)`
 - `list_recent(limit)`
 - `list_entities(memory_id)`
@@ -277,11 +268,11 @@ Full reference (inputs/outputs/examples): [docs/API.md](docs/API.md).
 
 ## Data model
 
-- `memories`: main table (content, summary, tags, session_id, priority, metadata)
-- `vec_memories`: sqlite-vec table for embeddings
-- `memories_fts`: FTS5 index synchronized via triggers (optional)
-- `entities`: extracted entities per memory
-- `graph_*`: graph entities/observations/relations (optional)
+- `entities`: both memory nodes (`entity_type='memory'`) and extracted world-fact entities
+- `observations`: stored text (content + tags/metadata), linked to an entity
+- `relations`: directed edges between entities, optionally linked to an observation
+- `observations.embedding`: libSQL vector embedding column (best-effort; requires libSQL vector functions)
+- `observations_fts`: FTS5 index synchronized via triggers (creates internal FTS5 tables)
 
 ## Comparison
 
@@ -289,11 +280,11 @@ Full reference (inputs/outputs/examples): [docs/API.md](docs/API.md).
 | --- | --- | --- | --- |
 | Storage | SQLite | libSQL (SQLite compatible) | JSONL |
 | Remote DB | No | Yes (libSQL/Turso) | No |
-| Vector search | Yes (sqlite-vec) | Yes (libSQL vector) | No |
+| Vector search | Yes (libSQL vector) | Yes (libSQL vector) | No |
 | FTS re-rank | Yes (FTS5) | Not documented | Not documented |
 | Session scoping | Yes (`session_id`) | Not documented | Not documented |
 | Knowledge graph | Yes | Yes | Yes |
-| Local summaries | Optional (GGUF) | Not documented | Not documented |
+| Local NER | Optional (GGUF) | Not documented | Not documented |
 
 Note: comparison is based on the published READMEs of those projects.
 
@@ -302,6 +293,7 @@ Note: comparison is based on the published READMEs of those projects.
 - [Docs index](docs/README.md)
 - [MCP tools API](docs/API.md)
 - [Configuration](docs/CONFIGURATION.md)
+- [libSQL local backend](docs/LIBSQL_LOCAL.md)
 - [Models](docs/MODELS.md)
 - [Benchmarks](docs/BENCHMARKS.md)
 - [Architecture](docs/ARCHITECTURE.md)
@@ -311,7 +303,7 @@ Note: comparison is based on the published READMEs of those projects.
 
 ## Performance snapshot
 
-Latest local benchmark artifact: `docs/benchmarks/2026-01-04-22-03.json`.
+Latest local benchmark artifacts are stored under `docs/benchmarks/`.
 
 | Benchmark | Mean | Ops/sec |
 |---|---:|---:|
@@ -321,7 +313,6 @@ Latest local benchmark artifact: `docs/benchmarks/2026-01-04-22-03.json`.
 | `hybrid_search` | 10.840 ms | 92 |
 | `tags_fts` | 0.131 ms | 7605 |
 | `tags_like` | 0.017 ms | 57367 |
-| `summary_gguf_cpu` (small/med/large) | 1.41s / 1.46s / 1.92s | 0.71 / 0.69 / 0.52 |
 
 ## Development
 

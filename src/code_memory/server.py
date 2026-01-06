@@ -1,33 +1,35 @@
 import json
 import os
 import time
+import atexit
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import List, Optional
 
 from fastmcp import Context, FastMCP
 
 from .config import (
-    DB_PATH,
+    DB_BACKEND,
+    DB_AUTH_TOKEN,
+    DB_URL,
     DEFAULT_TOP_K,
     DEFAULT_TOP_P,
     EMBED_MODEL_NAME,
-    ENABLE_FTS,
-    ENABLE_GRAPH,
-    ENABLE_SESSION_SCOPE,
-    ENABLE_VEC,
+    CROSS_SESSION_PENALTY,
     FTS_BONUS,
     LOG_FILE,
     LOG_LEVEL,
     MODEL_CACHE_DIR,
+    NER_AUTO_INSTALL,
+    NER_CTX,
+    NER_MAX_TOKENS,
+    NER_TEMPERATURE,
+    NER_THREADS,
     OVERSAMPLE_K,
     PRIORITY_WEIGHT,
     RECENCY_WEIGHT,
     ROOT,
-    SUMMARY_AUTO_INSTALL,
-    SUMMARY_CTX,
-    SUMMARY_MAX_TOKENS,
-    SUMMARY_TEMPERATURE,
-    SUMMARY_THREADS,
+    SESSION_BONUS,
     logger,
 )
 from .db import connect_db
@@ -36,7 +38,7 @@ from .embeddings import EmbeddingModel
 from .rerank import apply_recency_filter, clamp_top_k, clamp_top_p, parse_timestamp
 from .security import hash_content, looks_sensitive
 from .store import MemoryStore
-from . import summary as _summary
+from . import ner as _ner
 from .config import EMBED_DIM, get_setting
 
 
@@ -64,6 +66,37 @@ def _log_tool_io(tool_name: str, direction: str, payload: object) -> None:
     except Exception:
         max_chars = 20000
     logger.info("[tool:%s] %s %s", tool_name, direction, _truncate_for_log(payload, max_chars=max_chars))
+
+
+def _db_execute(conn, sql: str, params: Optional[tuple | list] = None):
+    if DB_BACKEND == "sqlite":
+        return conn.execute(sql, params or ())
+    return conn.execute(sql, list(params or []))
+
+
+def _db_fetchone(conn, sql: str, params: Optional[tuple | list] = None):
+    res = _db_execute(conn, sql, params)
+    if DB_BACKEND == "sqlite":
+        return res.fetchone()
+    return res.rows[0] if res.rows else None
+
+
+def _db_fetchall(conn, sql: str, params: Optional[tuple | list] = None):
+    res = _db_execute(conn, sql, params)
+    if DB_BACKEND == "sqlite":
+        return res.fetchall()
+    return res.rows
+
+
+def _db_lastrowid(result) -> int:
+    if DB_BACKEND == "sqlite":
+        return int(result.lastrowid)
+    return int(getattr(result, "last_insert_rowid", 0) or 0)
+
+
+def _db_commit(conn) -> None:
+    if DB_BACKEND == "sqlite":
+        conn.commit()
 
 
 # ---------------------------------------------------------------------------
@@ -99,64 +132,16 @@ def _clamp_top_p(value: float) -> float:
 
 
 def _connect_db(load_vec: bool = False):
-    return connect_db(db_path=DB_PATH, enable_vec=ENABLE_VEC or (ENABLE_GRAPH and ENABLE_VEC), load_vec=load_vec)
+    return connect_db(
+        enable_vec=True,
+        load_vec=load_vec,
+        db_url=DB_URL,
+        db_auth_token=DB_AUTH_TOKEN or None,
+    )
 
 
-# Summary model compatibility: keep server.SUMMARY_MODEL as a mutable variable used by tests/tools.
-SUMMARY_MODEL = os.getenv("CODE_MEMORY_SUMMARY_MODEL", "").strip()
-
-
-def _download_gguf_from_repo(repo_id: str) -> str:
-    return _summary.download_gguf_from_repo(repo_id)
-
-
-def _looks_like_hf_repo_id(value: str) -> bool:
-    return _summary.looks_like_hf_repo_id(value)
-
-
-def _resolve_summary_model_path() -> str:
-    configured = str(get_setting("CODE_MEMORY_SUMMARY_MODEL", "") or "").strip()
-    if configured:
-        if Path(configured).exists():
-            return configured
-        if _looks_like_hf_repo_id(configured):
-            if os.getenv("CODE_MEMORY_SUMMARY_AUTO_DOWNLOAD", "1").lower() in ("0", "false", "no"):
-                return ""
-            return _download_gguf_from_repo(configured)
-        return configured
-    return ""
-
-
-def _ensure_summary_model_path() -> str:
-    global SUMMARY_MODEL
-    if SUMMARY_MODEL:
-        try:
-            if Path(SUMMARY_MODEL).exists():
-                _summary.SUMMARY_MODEL = SUMMARY_MODEL
-                return SUMMARY_MODEL
-        except Exception:
-            pass
-        if _looks_like_hf_repo_id(SUMMARY_MODEL):
-            resolved = _download_gguf_from_repo(SUMMARY_MODEL)
-            if resolved:
-                SUMMARY_MODEL = resolved
-                _summary.SUMMARY_MODEL = resolved
-            return SUMMARY_MODEL
-        _summary.SUMMARY_MODEL = SUMMARY_MODEL
-        return SUMMARY_MODEL
-
-    resolved = _resolve_summary_model_path()
-    if resolved:
-        SUMMARY_MODEL = resolved
-        _summary.SUMMARY_MODEL = resolved
-        return SUMMARY_MODEL
-
-    return ""
-
-
-def _summary_enabled() -> bool:
-    _summary.SUMMARY_MODEL = SUMMARY_MODEL
-    return _summary.summary_enabled()
+def _ner_enabled() -> bool:
+    return _ner.ner_enabled()
 
 
 from .store import clamp_priority as _store_clamp_priority  # placed after to avoid circular formatting
@@ -171,9 +156,9 @@ server = FastMCP(
         "  1) ALWAYS use memory at the start of a session.\n"
         "     - As soon as a new session starts (or when you are unsure), call search_memory to recall context.\n"
         "     - This is fast and can be called frequently.\n"
-        "  2) ALWAYS scope memory by session_id.\n"
-        "     - You MUST pass the session_id from the client/tool you are currently using.\n"
-        "     - This server isolates memories per session_id; do not mix sessions.\n"
+        "  2) ALWAYS provide session_id when you can.\n"
+        "     - You SHOULD pass the session_id from the client/tool you are currently using.\n"
+        "     - The server boosts same-session results during search (session-aware ranking).\n"
         "  3) ALWAYS respect priority.\n"
         "     - Priority is 1..5 where 1 = highest importance and 5 = lowest.\n"
         "     - If the user explicitly says something is important, store it with priority=1 or 2.\n"
@@ -189,21 +174,22 @@ server = FastMCP(
         "  - After discovering important facts (commands, file paths, error causes, fixes).\n"
         "\n"
         "Basic concepts:\n"
-        "  - memories: stored text entries (optionally summarized), searchable.\n"
+        "  - memories: stored observations, searchable.\n"
         "  - tags: comma-separated labels to filter/organize (e.g., \"bugfix,db,perf\").\n"
         "  - kind: a short category (e.g., \"decision\", \"bugfix\", \"plan\", \"note\").\n"
-        "  - entities/graph: optional structured extraction and relations to improve recall.\n"
+        "  - entities/relations: structured world-fact extraction to improve recall.\n"
         "\n"
         "Tools you can call (high level):\n"
-        "  - search_memory(query, session_id, limit, top_p): retrieve relevant memories for THIS session.\n"
-        "  - remember(content, session_id, kind, summary, tags, priority, metadata_json): store new memory for THIS session.\n"
+        "  - search_memory(query, session_id, limit, top_p): retrieve relevant memories (same-session results get a boost).\n"
+        "  - remember(content, session_id, kind, tags, priority, metadata_json): store new memory for the given session.\n"
         "  - list_recent(limit): inspect recent memories (debug/inspection).\n"
         "  - list_entities(memory_id): view extracted entities for a memory.\n"
         "  - get_context_graph(query, limit): fetch/search the context graph.\n"
         "  - health(), diagnostics(): check server status/config.\n"
         "\n"
-        "Session scoping reminder:\n"
-        "  - For EVERY remember/search call, include the correct session_id for the session you are working in.\n"
+        "Session reminder:\n"
+        "  - For EVERY remember call, include the correct session_id.\n"
+        "  - For search_memory, include session_id when available so the server can boost same-session results.\n"
         "\n"
         "Notes:\n"
         "  - Sensitive content may be skipped.\n"
@@ -213,7 +199,22 @@ server = FastMCP(
 )
 
 
-store = MemoryStore(DB_PATH)
+store = MemoryStore()
+
+_BG_EXECUTOR = ThreadPoolExecutor(
+    max_workers=max(1, int(os.getenv("CODE_MEMORY_BG_WORKERS", "1") or "1")),
+    thread_name_prefix="code-memory-bg",
+)
+
+
+def _shutdown_bg_executor() -> None:
+    try:
+        _BG_EXECUTOR.shutdown(wait=False, cancel_futures=True)
+    except Exception:
+        pass
+
+
+atexit.register(_shutdown_bg_executor)
 
 
 def _resolve_session_id(session_id: Optional[str], ctx: Context | None) -> Optional[str]:
@@ -225,12 +226,169 @@ def _resolve_session_id(session_id: Optional[str], ctx: Context | None) -> Optio
     return env_session or None
 
 
+def _schedule_post_insert(observation_id: int, *, content: str, metadata: Optional[dict]) -> None:
+    if observation_id <= 0:
+        return
+    meta = metadata or {}
+
+    def _run_completion():
+        try:
+            store.complete_memory_fields(observation_id, content=content)
+        except Exception:
+            logger.exception("bg.complete_memory_fields failed observation_id=%s", observation_id)
+
+    def _run_ner():
+        try:
+            store.process_memory_ner(observation_id, content=content, metadata=meta)
+        except Exception:
+            logger.exception("bg.process_memory_ner failed observation_id=%s", observation_id)
+
+    try:
+        _BG_EXECUTOR.submit(_run_completion)
+        _BG_EXECUTOR.submit(_run_ner)
+    except Exception:
+        logger.exception("Failed to schedule background tasks observation_id=%s", observation_id)
+
+
 # -------------
 # MCP tools
 # -------------
+def _insert_memory_impl(
+    *,
+    tool_name: str,
+    content: str,
+    session_id: Optional[str],
+    kind: Optional[str],
+    tags: Optional[str],
+    priority: int,
+    metadata_json: Optional[str],
+    ctx: Context | None,
+) -> dict:
+    _log_tool_io(
+        tool_name,
+        "in",
+        {
+            "content": content,
+            "session_id": session_id,
+            "kind": kind,
+            "tags": tags,
+            "priority": priority,
+            "metadata_json": metadata_json,
+            "ctx_session_id": getattr(ctx, "session_id", None) if ctx else None,
+        },
+    )
+    resolved_session_id = _resolve_session_id(session_id, ctx)
+    if not resolved_session_id:
+        out = {"status": "error", "error": "session_id is required", "tool": tool_name}
+        _log_tool_io(tool_name, "out", out)
+        return out
+
+    metadata = json.loads(metadata_json) if metadata_json else None
+    mem_id = store.insert_memory(
+        content=content,
+        session_id=resolved_session_id,
+        kind=kind,
+        tags=tags,
+        priority=priority,
+        metadata=metadata,
+        ctx=ctx,
+    )
+    if mem_id == -1:
+        out = {"status": "skipped"}
+        _log_tool_io(tool_name, "out", out)
+        return out
+
+    _schedule_post_insert(mem_id, content=content, metadata=metadata)
+
+    stored = store.get_observation(mem_id)
+    stored_tags = stored.get("tags") if stored else tags
+    stored_kind = stored.get("kind") if stored else kind
+    stored_priority = stored.get("priority") if stored else priority
+    stored_hash = stored.get("content_hash") if stored else hash_content(content)
+    if ctx:
+        ctx.info(f"Stored memory {mem_id}")
+    logger.info("%s ok id=%s session_id=%s priority=%s", tool_name, mem_id, resolved_session_id, priority)
+    out = {
+        "id": mem_id,
+        "session_id": resolved_session_id,
+        "kind": stored_kind,
+        "tags": stored_tags,
+        "priority": stored_priority,
+        "content_hash": stored_hash,
+    }
+    _log_tool_io(tool_name, "out", out)
+    return out
+
+
 @server.tool(
     description=(
-        "Store a new memory entry (optionally: vector embedding, FTS indexing, entity extraction, and graph observations).\n"
+        "Insert a memory entry.\n"
+        "\n"
+        "This is the preferred API for agents.\n"
+        "\n"
+        "Important behavior:\n"
+        "- Writes the memory row immediately (fast).\n"
+        "- Runs post-processing asynchronously (slow):\n"
+        "  - entity/relation extraction (NER) and graph upserts\n"
+        "  - tag completion when tags are missing\n"
+        "\n"
+        "Parameters:\n"
+        "- content (str): the memory text to store.\n"
+        "- session_id (str): required session scope.\n"
+        "- kind (str|None): optional category (decision/bugfix/note/etc).\n"
+        "- tags (str|None): comma-separated tags; recommended when you already know them.\n"
+        "- priority (int): 1..5 (1 = highest importance).\n"
+        "- metadata_json (str|None): JSON object encoded as a string.\n"
+        "\n"
+        "Examples:\n"
+        "1) Minimal:\n"
+        "{ \"content\": \"We decided to use libSQL-only.\", \"session_id\": \"ses_...\" }\n"
+        "\n"
+        "2) With tags + metadata:\n"
+        "{\n"
+        "  \"content\": \"Fix: set CODE_MEMORY_DB_URL to start the server.\",\n"
+        "  \"session_id\": \"ses_...\",\n"
+        "  \"kind\": \"bugfix\",\n"
+        "  \"tags\": \"setup,libsql,windows\",\n"
+        "  \"priority\": 2,\n"
+        "  \"metadata_json\": \"{\\\"path\\\":\\\"src/code_memory/server.py\\\",\\\"ticket\\\":\\\"MEM-12\\\"}\"\n"
+        "}\n"
+        "\n"
+        "Return (success): {\"id\":..., \"session_id\":..., \"kind\":..., \"tags\":..., \"priority\":..., \"content_hash\":...}\n"
+        "Return (skipped): {\"status\":\"skipped\"}\n"
+        "Return (error): {\"status\":\"error\",...}\n"
+    )
+)
+def insert_memory(
+    content: str,
+    session_id: Optional[str] = None,
+    kind: Optional[str] = None,
+    tags: Optional[str] = None,
+    priority: int = 3,
+    metadata_json: Optional[str] = None,
+    ctx: Context | None = None,
+) -> dict:
+    try:
+        return _insert_memory_impl(
+            tool_name="insert_memory",
+            content=content,
+            session_id=session_id,
+            kind=kind,
+            tags=tags,
+            priority=priority,
+            metadata_json=metadata_json,
+            ctx=ctx,
+        )
+    except Exception as exc:  # pragma: no cover
+        logger.exception("Tool insert_memory failed")
+        out = {"status": "error", "error": str(exc), "tool": "insert_memory"}
+        _log_tool_io("insert_memory", "out", out)
+        return out
+
+
+@server.tool(
+    description=(
+        "Store a new memory entry. Deprecated: use insert_memory.\n"
         "\n"
         "When to call:\n"
         "- After the user states durable facts (preferences, constraints, decisions, reminders).\n"
@@ -245,7 +403,6 @@ def _resolve_session_id(session_id: Optional[str], ctx: Context | None) -> Optio
         "- content (str): The memory text to store. Keep it short and specific.\n"
         "- session_id (str): Session scope for retrieval. Required.\n"
         "- kind (str|None): Optional category. Examples: 'decision', 'preference', 'todo', 'context', 'bug'.\n"
-        "- summary (str|None): Optional human-readable summary. If omitted, the server auto-generates one.\n"
         "- tags (str|None): Optional comma-separated tags. If omitted, the server auto-generates tags.\n"
         "  Examples: 'setup,windows,sqlite', 'rag,search,tuning'.\n"
         "- priority (int): 1..5 where 1 = most important. Affects reranking during search.\n"
@@ -255,7 +412,6 @@ def _resolve_session_id(session_id: Optional[str], ctx: Context | None) -> Optio
         "Return (success):\n"
         "{\n"
         "  \"id\": 123,\n"
-        "  \"summary\": \"...\",\n"
         "  \"session_id\": \"...\",\n"
         "  \"kind\": \"decision\",\n"
         "  \"tags\": \"setup,windows\",\n"
@@ -274,61 +430,23 @@ def remember(
     content: str,
     session_id: Optional[str] = None,
     kind: Optional[str] = None,
-    summary: Optional[str] = None,
     tags: Optional[str] = None,
     priority: int = 3,
     metadata_json: Optional[str] = None,
     ctx: Context | None = None,
 ) -> dict:
     try:
-        _log_tool_io(
-            "remember",
-            "in",
-            {
-                "content": content,
-                "session_id": session_id,
-                "kind": kind,
-                "summary": summary,
-                "tags": tags,
-                "priority": priority,
-                "metadata_json": metadata_json,
-                "ctx_session_id": getattr(ctx, "session_id", None) if ctx else None,
-            },
-        )
-        resolved_session_id = _resolve_session_id(session_id, ctx)
-        if not resolved_session_id:
-            out = {"status": "error", "error": "session_id is required", "tool": "remember"}
-            _log_tool_io("remember", "out", out)
-            return out
-        metadata = json.loads(metadata_json) if metadata_json else None
-        mem_id = store.add(
+        logger.warning("Tool remember is deprecated; use insert_memory instead.")
+        return _insert_memory_impl(
+            tool_name="remember",
             content=content,
-            session_id=resolved_session_id,
+            session_id=session_id,
             kind=kind,
-            summary=summary,
             tags=tags,
             priority=priority,
-            metadata=metadata,
+            metadata_json=metadata_json,
             ctx=ctx,
         )
-        if mem_id == -1:
-            out = {"status": "skipped"}
-            _log_tool_io("remember", "out", out)
-            return out
-        if ctx:
-            ctx.info(f"Stored memory {mem_id}")
-        logger.info("remember ok id=%s session_id=%s priority=%s", mem_id, resolved_session_id, priority)
-        logger.debug("remember payload summary=%s tags=%s kind=%s metadata=%s", summary, tags, kind, metadata)
-        out = {
-            "id": mem_id,
-            "summary": summary,
-            "session_id": resolved_session_id,
-            "kind": kind,
-            "tags": tags,
-            "priority": priority,
-        }
-        _log_tool_io("remember", "out", out)
-        return out
     except Exception as exc:  # pragma: no cover
         logger.exception("Tool remember failed")
         out = {"status": "error", "error": str(exc), "tool": "remember"}
@@ -340,13 +458,13 @@ def remember(
     description=(
         "Hybrid search over stored memories (semantic vector search + optional FTS re-rank).\n"
         "\n"
-        "Required:\n"
-        "- session_id: Always pass the current session id to search only within the current session.\n"
-        "  (If omitted, the server will try ctx.session_id or CODE_MEMORY_SESSION_ID.)\n"
+        "Session-aware ranking:\n"
+        "- If session_id is provided (argument, ctx.session_id, or CODE_MEMORY_SESSION_ID), results from the same\n"
+        "  session get a score bonus.\n"
         "\n"
         "Parameters:\n"
         "- query (str): Natural language or keyword query. Also used for FTS matching.\n"
-        "- session_id (str): Session scope for retrieval. Required.\n"
+        "- session_id (str|None): Optional session id for ranking boost.\n"
         "- limit (int): Number of results to return (top_k). Default comes from CODE_MEMORY_TOP_K.\n"
         "  Internally the server oversamples candidates by CODE_MEMORY_OVERSAMPLE_K before reranking.\n"
         "- top_p (float): Recency window for reranking (0 < top_p <= 1). Default from CODE_MEMORY_TOP_P.\n"
@@ -356,11 +474,12 @@ def remember(
         "How results are ranked:\n"
         "- Starts from vector distance (lower is better).\n"
         "- Applies an FTS bonus when there is an FTS hit.\n"
+        "- Applies a session bonus for same-session results.\n"
         "- Applies a priority penalty (priority 1 is favored over priority 5).\n"
         "- Applies a recency penalty (older is ranked lower).\n"
         "\n"
         "Return: list[dict] sorted by score (lower is better). Each item contains:\n"
-        "- id, session_id, kind, content, summary, tags, priority, metadata (object), created_at\n"
+        "- id, session_id, kind, content, content_hash, tags, priority, metadata (object), created_at\n"
         "- score (float): final reranked score (lower is better)\n"
         "- fts_hit (bool): whether the item matched via FTS\n"
         "\n"
@@ -370,7 +489,7 @@ def remember(
         "    \"id\": 101,\n"
         "    \"session_id\": \"s-123\",\n"
         "    \"kind\": \"decision\",\n"
-        "    \"summary\": \"Use SQLite vec0 for embeddings...\",\n"
+        "    \"content_hash\": \"...\",\n"
         "    \"tags\": \"sqlite,vec,rag\",\n"
         "    \"priority\": 2,\n"
         "    \"score\": 0.42,\n"
@@ -381,7 +500,7 @@ def remember(
         "Tuning tips:\n"
         "- Broad recall: limit=20..50, top_p=1.0.\n"
         "- Recent-only context (avoid stale matches): limit=10..20, top_p=0.3..0.7.\n"
-        "- Exact identifiers/tags: include the exact token(s) in query (FTS searches content/summary/tags/metadata).\n"
+        "- Exact identifiers/tags: include the exact token(s) in query (FTS searches content/tags/metadata).\n"
         "\n"
         "Return (error):\n"
         "- {\"status\":\"error\",\"error\":\"...\",\"tool\":\"search_memory\"}\n"
@@ -406,11 +525,7 @@ def search_memory(
                 "ctx_session_id": getattr(ctx, "session_id", None) if ctx else None,
             },
         )
-        resolved_session_id = _resolve_session_id(session_id, ctx) if ENABLE_SESSION_SCOPE else None
-        if ENABLE_SESSION_SCOPE and not resolved_session_id:
-            out = {"status": "error", "error": "session_id is required", "tool": "search_memory"}
-            _log_tool_io("search_memory", "out", out)
-            return out
+        resolved_session_id = _resolve_session_id(session_id, ctx)
         limit = clamp_top_k(limit)
         top_p = clamp_top_p(top_p)
         out = store.search(query=query, session_id=resolved_session_id, limit=limit, top_p=top_p)
@@ -435,10 +550,10 @@ def search_memory(
         "- limit (int): Max number of rows to return (default: 20).\n"
         "\n"
         "Return: list[dict] ordered by created_at desc. Each item contains:\n"
-        "- id, session_id, kind, content, summary, tags, priority, metadata (object), created_at\n"
+        "- id, session_id, kind, content, content_hash, tags, priority, metadata (object), created_at\n"
         "\n"
         "Example return:\n"
-        "[{\"id\":1,\"session_id\":\"s-123\",\"summary\":\"...\",\"tags\":\"general\",\"priority\":3,\"created_at\":\"2026-01-04 12:34:56\"}]\n"
+        "[{\"id\":1,\"session_id\":\"s-123\",\"content_hash\":\"...\",\"tags\":\"general\",\"priority\":3,\"created_at\":\"2026-01-04 12:34:56\"}]\n"
     )
 )
 def list_recent(limit: int = 20) -> List[dict]:
@@ -458,16 +573,16 @@ def list_recent(limit: int = 20) -> List[dict]:
     description=(
         "List entities extracted from a single memory entry.\n"
         "\n"
-        "Entity extraction is best-effort and may use regex and/or tree-sitter (when available).\n"
+        "Entity extraction is best-effort (LLM + regex fallback).\n"
         "\n"
         "Parameters:\n"
         "- memory_id (int): Memory id returned by remember().\n"
         "\n"
         "Return: list[dict] where each item contains:\n"
-        "- entity_type (str), name (str), source (str), path (str|None)\n"
+        "- name (str), entity_type (str), relation_type (str)\n"
         "\n"
         "Example return:\n"
-        "[{\"entity_type\":\"function\",\"name\":\"search_memory\",\"source\":\"tree-sitter\",\"path\":null}]\n"
+        "[{\"name\":\"PostgreSQL\",\"entity_type\":\"technology\",\"relation_type\":\"mentions\"}]\n"
     )
 )
 def list_entities(memory_id: int) -> List[dict]:
@@ -488,7 +603,6 @@ def list_entities(memory_id: int) -> List[dict]:
         "Upsert (create or update) a knowledge-graph entity and attach observations.\n"
         "\n"
         "Notes:\n"
-        "- Requires CODE_MEMORY_ENABLE_GRAPH=1. If disabled, returns status 'disabled'.\n"
         "- Observations should be short sentences, facts, or summaries.\n"
         "\n"
         "Parameters:\n"
@@ -520,10 +634,6 @@ def upsert_entity(
                 "memory_id": memory_id,
             },
         )
-        if not ENABLE_GRAPH:
-            out = {"status": "disabled"}
-            _log_tool_io("upsert_entity", "out", out)
-            return out
         observations = json.loads(observations_json) if observations_json else []
         if not isinstance(observations, list):
             observations = [str(observations)]
@@ -543,7 +653,6 @@ def upsert_entity(
         "Add a directed relation between two knowledge-graph entities.\n"
         "\n"
         "Notes:\n"
-        "- Requires CODE_MEMORY_ENABLE_GRAPH=1. If disabled, returns status 'disabled'.\n"
         "- If the entities do not exist, they are created automatically.\n"
         "\n"
         "Parameters:\n"
@@ -574,10 +683,6 @@ def add_relation(
                 "memory_id": memory_id,
             },
         )
-        if not ENABLE_GRAPH:
-            out = {"status": "disabled"}
-            _log_tool_io("add_relation", "out", out)
-            return out
         rel_id = store.add_graph_relation(source, target, relation_type, memory_id)
         out = {"status": "ok", "relation_id": rel_id}
         _log_tool_io("add_relation", "out", out)
@@ -594,7 +699,6 @@ def add_relation(
         "Fetch a knowledge-graph entity by name, including observations and relations.\n"
         "\n"
         "Notes:\n"
-        "- Requires CODE_MEMORY_ENABLE_GRAPH=1. If disabled, returns {\"status\":\"disabled\"}.\n"
         "- If the entity does not exist, returns {\"status\":\"not_found\"}.\n"
         "\n"
         "Parameters:\n"
@@ -635,7 +739,6 @@ def get_entity(name: str) -> dict:
         "If query is omitted, returns the most recent entities in the graph.\n"
         "\n"
         "Notes:\n"
-        "- Requires CODE_MEMORY_ENABLE_GRAPH=1. If disabled, returns {\"status\":\"disabled\"}.\n"
         "\n"
         "Parameters:\n"
         "- query (str|None): Optional semantic query to select relevant entities.\n"
@@ -676,9 +779,10 @@ def get_context_graph(query: Optional[str] = None, limit: int = 10) -> dict:
         "Parameters:\n"
         "- action (str): One of:\n"
         "  - 'vacuum' (non-destructive): run SQLite VACUUM\n"
-        "  - 'purge_all' (destructive): delete all memories\n"
-        "  - 'purge_session' (destructive): delete memories for a specific session_id\n"
-        "  - 'prune_older_than' (destructive): delete memories older than older_than_days\n"
+        "  - 'rebuild_graph' (destructive): rebuild entities + relations from stored observations\n"
+        "  - 'purge_all' (destructive): delete all observations\n"
+        "  - 'purge_session' (destructive): delete observations for a specific session_id\n"
+        "  - 'prune_older_than' (destructive): delete observations older than older_than_days\n"
         "- confirm (bool): Required for destructive actions (any action except 'vacuum').\n"
         "- session_id (str|None): Required when action='purge_session'.\n"
         "- older_than_days (int|None): Required when action='prune_older_than'.\n"
@@ -711,22 +815,107 @@ def maintenance(
             _log_tool_io("maintenance", "out", out)
             return out
 
-        conn = connect_db(db_path=DB_PATH, enable_vec=ENABLE_VEC or (ENABLE_GRAPH and ENABLE_VEC), load_vec=ENABLE_VEC)
+        conn = _connect_db(load_vec=False)
         try:
             if action == "vacuum":
                 conn.execute("VACUUM")
                 out = {"status": "ok", "action": "vacuum"}
                 _log_tool_io("maintenance", "out", out)
                 return out
+            if action == "rebuild_graph":
+                # Unified strategy: keep existing memory observations, rebuild entities+relations from them.
+                rows = _db_fetchall(
+                    conn,
+                    """
+                    SELECT o.id, o.content, o.metadata, o.entity_id
+                    FROM observations o
+                    JOIN entities e ON o.entity_id = e.id
+                    WHERE e.entity_type = 'memory'
+                    ORDER BY o.id
+                    """
+                )
+
+                conn.execute("DELETE FROM relations")
+                conn.execute("DELETE FROM entities WHERE entity_type != 'memory'")
+                _db_commit(conn)
+
+                rebuilt_entities = 0
+                rebuilt_relations = 0
+                for obs_id, content, metadata, mem_entity_id in rows:
+                    try:
+                        meta = json.loads(metadata or "{}") if isinstance(metadata, str) else (metadata or {})
+                    except Exception:
+                        meta = {}
+                    entity_path = meta.get("path") or meta.get("file_path") or meta.get("filepath")
+                    try:
+                        entity_path = str(entity_path) if entity_path else None
+                    except Exception:
+                        entity_path = None
+
+                    graph = extract_graph(content or "", path=entity_path, use_llm=False)
+
+                    for e in graph.get("entities", []) or []:
+                        name = str(e.get("name") or "").strip()
+                        et = str(e.get("type") or "other").strip()
+                        if not name:
+                            continue
+                        row = _db_fetchone(conn, "SELECT id FROM entities WHERE name = ?", (name,))
+                        if row:
+                            ent_id = int(row[0])
+                            conn.execute("UPDATE entities SET entity_type = ? WHERE id = ?", (et or "other", ent_id))
+                        else:
+                            cur = conn.execute("INSERT INTO entities (name, entity_type) VALUES (?, ?)", (name, et or "other"))
+                            ent_id = _db_lastrowid(cur)
+                        rebuilt_entities += 1
+                        conn.execute(
+                            "INSERT INTO relations (source_id, target_id, relation_type, observation_id) VALUES (?, ?, 'mentions', ?)",
+                            (int(mem_entity_id), ent_id, int(obs_id)),
+                        )
+                        rebuilt_relations += 1
+
+                    for r in graph.get("relations", []) or []:
+                        src_name = str(r.get("source") or "").strip()
+                        tgt_name = str(r.get("target") or "").strip()
+                        rel_type = str(r.get("type") or "related_to").strip()
+                        if not src_name or not tgt_name or not rel_type:
+                            continue
+                        src_row = _db_fetchone(conn, "SELECT id FROM entities WHERE name = ?", (src_name,))
+                        if not src_row:
+                            cur = conn.execute("INSERT INTO entities (name, entity_type) VALUES (?, 'other')", (src_name,))
+                            src_id = _db_lastrowid(cur)
+                        else:
+                            src_id = int(src_row[0])
+                        tgt_row = _db_fetchone(conn, "SELECT id FROM entities WHERE name = ?", (tgt_name,))
+                        if not tgt_row:
+                            cur = conn.execute("INSERT INTO entities (name, entity_type) VALUES (?, 'other')", (tgt_name,))
+                            tgt_id = _db_lastrowid(cur)
+                        else:
+                            tgt_id = int(tgt_row[0])
+                        conn.execute(
+                            "INSERT INTO relations (source_id, target_id, relation_type, observation_id) VALUES (?, ?, ?, ?)",
+                            (src_id, tgt_id, rel_type, int(obs_id)),
+                        )
+                        rebuilt_relations += 1
+
+                _db_commit(conn)
+                out = {
+                    "status": "ok",
+                    "action": "rebuild_graph",
+                    "observations": len(rows),
+                    "entities": rebuilt_entities,
+                    "relations": rebuilt_relations,
+                }
+                _log_tool_io("maintenance", "out", out)
+                return out
 
             ids = []
             if action == "purge_all":
-                ids = [row[0] for row in conn.execute("SELECT id FROM memories").fetchall()]
+                ids = [row[0] for row in _db_fetchall(conn, "SELECT id FROM observations")]
             elif action == "purge_session" and session_id:
-                ids = [row[0] for row in conn.execute("SELECT id FROM memories WHERE session_id = ?", (session_id,)).fetchall()]
+                ids = [row[0] for row in _db_fetchall(conn, "SELECT id FROM observations WHERE session_id = ?", (session_id,))]
             elif action == "prune_older_than" and older_than_days is not None:
                 cutoff = time.time() - (older_than_days * 86400)
-                rows = conn.execute("SELECT id, created_at FROM memories").fetchall()
+                rows = _db_fetchall(conn, "SELECT id, created_at FROM observations")
                 for mid, created_at in rows:
                     ts = parse_timestamp(created_at)
                     if ts and ts < cutoff:
@@ -740,14 +929,9 @@ def maintenance(
                 return out
 
             placeholders = ",".join("?" for _ in ids)
-            conn.execute(f"DELETE FROM entities WHERE memory_id IN ({placeholders})", ids)
-            if ENABLE_VEC:
-                conn.execute(f"DELETE FROM vec_memories WHERE rowid IN ({placeholders})", ids)
-            if ENABLE_GRAPH:
-                conn.execute(f"DELETE FROM graph_observations WHERE memory_id IN ({placeholders})", ids)
-                conn.execute(f"DELETE FROM graph_relations WHERE memory_id IN ({placeholders})", ids)
-            conn.execute(f"DELETE FROM memories WHERE id IN ({placeholders})", ids)
-            conn.commit()
+            conn.execute(f"DELETE FROM relations WHERE observation_id IN ({placeholders})", ids)
+            conn.execute(f"DELETE FROM observations WHERE id IN ({placeholders})", ids)
+            _db_commit(conn)
             out = {"status": "ok", "deleted": len(ids)}
             _log_tool_io("maintenance", "out", out)
             return out
@@ -762,34 +946,34 @@ def maintenance(
 
 @server.tool(
     description=(
-        "Diagnostics for environment, DB, and feature flags.\n"
+        "Diagnostics for environment and DB.\n"
         "\n"
         "Use cases:\n"
-        "- Confirm which features are enabled (vec/fts/graph).\n"
+        "- Confirm DB backend/url and defaults.\n"
         "- Confirm embedding model/dim, cache paths, and defaults.\n"
         "- Inspect table presence and approximate row counts.\n"
         "\n"
-        "Return: a dict containing cwd, db_path, embedding config, flags, defaults, summary config, tables, and counts.\n"
+        "Return: a dict containing cwd, db config, embedding config, defaults, NER config, tables, and counts.\n"
     )
 )
 def diagnostics() -> dict:
     try:
         _log_tool_io("diagnostics", "in", {})
-        conn = connect_db(db_path=DB_PATH, enable_vec=ENABLE_VEC or (ENABLE_GRAPH and ENABLE_VEC), load_vec=ENABLE_VEC)
+        conn = _connect_db(load_vec=False)
         try:
-            tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
+            tables = [r[0] for r in _db_fetchall(conn, "SELECT name FROM sqlite_master WHERE type='table'")]
             counts = {}
-            for t in ("memories", "entities", "graph_entities", "graph_observations", "graph_relations"):
+            for t in ("entities", "observations", "relations", "observations_fts"):
                 if t in tables:
-                    counts[t] = conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
+                    counts[t] = _db_fetchone(conn, f"SELECT COUNT(*) FROM {t}")[0]
         finally:
             conn.close()
         out = {
             "cwd": str(Path.cwd()),
-            "db_path": str(DB_PATH),
+            "db_backend": DB_BACKEND,
+            "db_url": DB_URL,
             "model": EMBED_MODEL_NAME,
             "model_cache_dir": str(MODEL_CACHE_DIR),
-            "flags": {"vec": ENABLE_VEC, "fts": ENABLE_FTS, "graph": ENABLE_GRAPH, "session_scope": ENABLE_SESSION_SCOPE},
             "defaults": {
                 "top_k": DEFAULT_TOP_K,
                 "top_p": DEFAULT_TOP_P,
@@ -797,15 +981,18 @@ def diagnostics() -> dict:
                 "priority_weight": PRIORITY_WEIGHT,
                 "fts_bonus": FTS_BONUS,
                 "oversample_k": OVERSAMPLE_K,
+                "session_bonus": SESSION_BONUS,
+                "cross_session_penalty": CROSS_SESSION_PENALTY,
             },
-            "summary": {
-                "enabled": _summary_enabled(),
-                "model": SUMMARY_MODEL,
-                "ctx": SUMMARY_CTX,
-                "threads": SUMMARY_THREADS,
-                "max_tokens": SUMMARY_MAX_TOKENS,
-                "temperature": SUMMARY_TEMPERATURE,
-                "auto_install": SUMMARY_AUTO_INSTALL,
+            "ner": {
+                "enabled": _ner_enabled(),
+                "model": str(get_setting("CODE_MEMORY_NER_MODEL", "") or ""),
+                "ctx": NER_CTX,
+                "threads": NER_THREADS,
+                "max_tokens": NER_MAX_TOKENS,
+                "temperature": NER_TEMPERATURE,
+                "auto_install": NER_AUTO_INSTALL,
+                "auto_download": os.getenv("CODE_MEMORY_NER_AUTO_DOWNLOAD", "1"),
             },
             "tables": tables,
             "counts": counts,
@@ -823,8 +1010,8 @@ def diagnostics() -> dict:
     description=(
         "Health check for the server.\n"
         "\n"
-        "Return: a dict with status='ok' and key runtime configuration (db path, embedding model/dim, feature flags,\n"
-        "default search parameters, and summary configuration).\n"
+        "Return: a dict with status='ok' and key runtime configuration (db path, embedding model/dim,\n"
+        "default search parameters, and NER configuration).\n"
     )
 )
 def health() -> dict:
@@ -832,7 +1019,7 @@ def health() -> dict:
         _log_tool_io("health", "in", {})
         info = {
             "status": "ok",
-            "db_path": str(DB_PATH),
+            "db_url": DB_URL,
             "embedding_dim": store.embedder.dim,
             "model": EMBED_MODEL_NAME,
             "model_cache_dir": str(MODEL_CACHE_DIR),
@@ -843,15 +1030,17 @@ def health() -> dict:
             "priority_weight": PRIORITY_WEIGHT,
             "fts_bonus": FTS_BONUS,
             "oversample_k": OVERSAMPLE_K,
-            "flags": {"vec": ENABLE_VEC, "fts": ENABLE_FTS, "graph": ENABLE_GRAPH, "session_scope": ENABLE_SESSION_SCOPE},
-            "summary": {
-                "enabled": _summary_enabled(),
-                "model": SUMMARY_MODEL,
-                "ctx": SUMMARY_CTX,
-                "threads": SUMMARY_THREADS,
-                "max_tokens": SUMMARY_MAX_TOKENS,
-                "temperature": SUMMARY_TEMPERATURE,
-                "auto_install": SUMMARY_AUTO_INSTALL,
+            "session_bonus": SESSION_BONUS,
+            "cross_session_penalty": CROSS_SESSION_PENALTY,
+            "ner": {
+                "enabled": _ner_enabled(),
+                "model": str(get_setting("CODE_MEMORY_NER_MODEL", "") or ""),
+                "ctx": NER_CTX,
+                "threads": NER_THREADS,
+                "max_tokens": NER_MAX_TOKENS,
+                "temperature": NER_TEMPERATURE,
+                "auto_install": NER_AUTO_INSTALL,
+                "auto_download": os.getenv("CODE_MEMORY_NER_AUTO_DOWNLOAD", "1"),
             },
             "log_level": LOG_LEVEL,
             "log_file": str(LOG_FILE) if LOG_FILE else None,
